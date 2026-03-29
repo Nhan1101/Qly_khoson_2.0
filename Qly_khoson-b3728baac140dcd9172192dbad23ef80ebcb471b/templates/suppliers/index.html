@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Quản lý Nhà Cung Cấp{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/suppliers.css' %}">
+{% endblock %}
+
+{% block menu_suppliers_active %}is-active{% endblock %}
+
+{% block content %}
+  <section class="suppliers">
+    <div class="search-card">
+      <div class="search-grid">
+        <label>
+          <span>Mã</span>
+          <input type="text" placeholder="NCC_01">
+        </label>
+        <label>
+          <span>Tên nhà cung cấp</span>
+          <input type="text" placeholder="Nhà cung cấp A">
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" placeholder="ncc@email.com">
+        </label>
+        <label>
+          <span>Số điện thoại</span>
+          <input type="text" placeholder="0389xxxxxx">
+        </label>
+        <label class="full">
+          <span>Địa chỉ</span>
+          <input type="text" placeholder="Mỹ An - Ngũ Hành Sơn - ĐN">
+        </label>
+        <div class="search-actions">
+          <button class="btn-primary" type="button">Tìm kiếm</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn-secondary" type="button">+ Thêm mới nguồn</button>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Tên nhà cung cấp</th>
+            <th>SĐT</th>
+            <th>Email</th>
+            <th>Địa chỉ</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for supplier in suppliers %}
+          <tr>
+            <td>{{ supplier.id }}</td>
+            <td>{{ supplier.ten_ncc }}</td>
+            <td>{{ supplier.so_dien_thoai }}</td>
+            <td>{{ supplier.email }}</td>
+            <td>{{ supplier.dia_chi }}</td>
+            <td class="actions">
+              <button class="icon-edit" type="button" aria-label="Sửa"></button>
+              <button class="icon-delete" type="button" aria-label="Xóa"></button>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="empty">Chưa có dữ liệu nhà cung cấp.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Trước</a>
+      {% else %}
+        <span class="page-link is-disabled">Trước</span>
+      {% endif %}
+      <span class="page-info">Trang {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sau</a>
+      {% else %}
+        <span class="page-link is-disabled">Sau</span>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+{% endblock %}
