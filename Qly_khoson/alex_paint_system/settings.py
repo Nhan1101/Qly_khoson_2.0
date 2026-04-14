@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'QuanLyTaiKhoa.apps.QuanLyTaiKhoaConfig',
     'QuanLyKiemKe.apps.QuanLyKiemKeConfig',
     'DangNhap.apps.DangNhapConfig',
+    'nhapkho.apps.NhapkhoConfig',
 ]
 
 AUTH_USER_MODEL = 'suppliers.NguoiDung'
@@ -130,4 +131,3 @@ STATICFILES_DIRS = [
 # Authentication settings
 LOGIN_URL = 'dang-nhap:login'
 LOGOUT_REDIRECT_URL = 'dang-nhap:login'
-

@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+
+{% block title %}Sửa Phiếu Nhập Kho - ALEX Paint System{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .phieu-view-container {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        background-color: transparent; /* Trong suốt */
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        min-height: calc(100vh - 60px);
+    }
+
+    .phieu-view-modal {
+        background: #ffffff;
+        width: 1200px;
+        border: 1px solid #777;
+        position: relative;
+        padding-bottom: 50px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .phieu-view-header {
+        text-align: center;
+        padding: 22px 0 18px 0;
+    }
+    .phieu-view-header h2 {
+        font-size: 17px;
+        font-weight: 700;
+        color: #000;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .btn-close-view {
+        position: absolute;
+        top: 15px; right: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #000;
+        cursor: pointer;
+        background: none;
+        border: none;
+        text-decoration: none;
+    }
+
+    .info-box-view {
+        background-color: #e8e8e8;
+        border: 1px solid #777;
+        margin: 0 20px 15px 20px;
+        padding: 16px 20px 24px 20px;
+    }
+    .info-box-view h3 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #000;
+        margin-top: 0;
+    }
+
+    .info-grid-view {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 40px;
+    }
+
+    .form-group-view {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .form-group-view label {
+        font-size: 12px;
+        color: #000;
+        padding-top: 6px;
+        white-space: nowrap;
+    }
+
+    .input-control-view {
+        width: 250px;
+        border: 1px solid #5a5eb9;
+        outline: none;
+        font-size: 13px;
+        padding: 0 6px;
+        background-color: #fff;
+        color: #000;
+        text-align: right;
+    }
+    input.input-control-view { height: 26px; }
+    textarea.input-control-view { height: 50px; resize: none; padding: 6px; }
+
+    .disabled-bg-view { background-color: #cecece; pointer-events: none; }
+
+    .data-table-view {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 45px;
+    }
+    .data-table-view th {
+        background-color: #eeeeee;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 12px 5px;
+        text-align: center;
+        border: none;
+        color: #000;
+    }
+    .data-table-view td { padding: 18px 5px; text-align: center; }
+
+    .cell-line-input {
+        border: none;
+        border-bottom: 1px solid #000;
+        padding: 4px 0;
+        font-size: 13px;
+        color: #000;
+        text-align: center;
+        width: 100%;
+        background: transparent;
+        outline: none;
+    }
+    .cell-line-input:focus {
+        border-bottom: 2px solid #5a5eb9;
+    }
+
+    .btn-delete-item { color: #eb0000; cursor: pointer; font-size: 16px; border: none; background: none; padding: 0; }
+
+    .total-wrapper-phieu {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 35px;
+    }
+    .total-box-phieu {
+        background-color: #e8e8e8;
+        border-radius: 15px;
+        width: 320px;
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 25px;
+        font-weight: 700;
+        font-size: 15px;
+        color: #000;
+    }
+
+    .action-row-view { display: flex; justify-content: flex-end; padding: 0 20px; margin-top: 20px; }
+    .btn-save-view {
+        background-color: #0b00a8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 35px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-save-view:hover { background-color: #080080; color: white; }
+
+    /* Confirm Modal Styles */
+    .confirm-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; visibility: hidden; opacity: 0; transition: opacity 0.3s; }
+    .confirm-modal-overlay.show { visibility: visible; opacity: 1; }
+    .confirm-modal-content { background: #ffffff; border-radius: 8px; padding: 10px 20px 25px 20px; width: 380px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .confirm-header { display: flex; justify-content: flex-end; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 20px; }
+    .close-btn { background: none; border: none; font-size: 22px; font-weight: bold; cursor: pointer; color: #555; line-height: 1; padding: 0; }
+    .close-btn:hover { color: #000; }
+    .confirm-modal-content p { font-size: 14px; color: #000; text-align: center; margin: 0 0 25px 0; }
+    .confirm-modal-actions { display: flex; justify-content: center; gap: 40px; }
+    .confirm-modal-actions button { padding: 9px 30px; border: none; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; color: #ffffff; }
+</style>
+
+<div class="phieu-view-container">
+    <div class="phieu-view-modal">
+        <a href="{% url 'nhap_kho' %}" class="btn-close-view">X</a>
+
+        <div class="phieu-view-header">
+            <h2>PHIẾU NHẬP KHO</h2>
+        </div>
+
+        <div class="info-box-view">
+            <h3>Thông tin chung</h3>
+            <div class="info-grid-view">
+                <div class="col-left">
+                    <div class="form-group-view" style="margin-bottom: 15px;">
+                        <label>Tên NCC</label>
+                        <input type="text" class="input-control-view" value="Nhà cung cấp A">
+                    </div>
+                    <div class="form-group-view" style="margin-bottom: 15px;">
+                        <label>Mã NCC</label>
+                        <input type="text" class="input-control-view" value="NCCA_9843">
+                    </div>
+                    <div class="form-group-view" style="margin-bottom: 15px;">
+                        <label>Số điện thoại</label>
+                        <input type="text" class="input-control-view" value="0985424661">
+                    </div>
+                    <div class="form-group-view">
+                        <label>Địa chỉ</label>
+                        <textarea class="input-control-view">446 Minh Khai, p. Vĩnh Tuy, q2, HCM.</textarea>
+                    </div>
+                </div>
+                <div class="col-right">
+                    <div class="form-group-view" style="margin-bottom: 15px;">
+                        <label>Mã phiếu</label>
+                        <input type="text" class="input-control-view disabled-bg-view" readonly value="NK000001">
+                    </div>
+                    <div class="form-group-view">
+                        <label>Lý do</label>
+                        <textarea class="input-control-view">Hàng mới về tháng 11</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="data-table-view">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">STT</th>
+                    <th style="width: 170px;">Tên hàng hóa</th>
+                    <th style="width: 100px;">Mã hàng</th>
+                    <th style="width: 100px;">Số lô</th>
+                    <th style="width: 110px;">NSX</th>
+                    <th style="width: 110px;">HSD</th>
+                    <th style="width: 80px;">SL Tồn</th>
+                    <th style="width: 80px;">Đơn vị<br>tính</th>
+                    <th style="width: 100px;">Đơn giá</th>
+                    <th style="width: 80px;">Số lượng</th>
+                    <th style="width: 130px;">Thành tiền</th>
+                    <th style="width: 50px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="edit-table-body">
+                <tr>
+                    <td><input type="text" class="cell-line-input stt" value="1" style="width: 35px;"></td>
+                    <td><input type="text" class="cell-line-input" value="Sơn Alex - Màu ABC"></td>
+                    <td><input type="text" class="cell-line-input" value="XXXXX" style="width: 75px;"></td>
+                    <td><input type="text" class="cell-line-input" value="BATCH001" style="width: 85px;"></td>
+                    <td><input type="date" class="cell-line-input" value="2023-11-01" style="width: 105px;"></td>
+                    <td><input type="date" class="cell-line-input" value="2025-11-01" style="width: 105px;"></td>
+                    <td><input type="number" class="cell-line-input" value="100" style="width: 65px;"></td>
+                    <td><input type="text" class="cell-line-input" value="Thùng" style="width: 50px;"></td>
+                    <td><input type="text" class="cell-line-input don-gia-edit" value="30.000.000" style="width: 85px;"></td>
+                    <td><input type="text" class="cell-line-input so-luong-edit" value="10" style="width: 50px;"></td>
+                    <td><input type="text" class="cell-line-input thanh-tien-edit" value="300.000.000" style="width: 95px;" readonly></td>
+                    <td><button class="btn-delete-item" onclick="deleteRow(this)"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total-wrapper-phieu"><div class="total-box-phieu"><span>TỔNG TIỀN:</span><span id="tong-tien-edit">300.000.000 đ</span></div></div>
+        <div class="action-row-view"><a href="{% url 'nhap_kho' %}" class="btn-save-view">Lưu</a></div>
+    </div>
+</div>
+
+<div class="confirm-modal-overlay" id="confirm-delete-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-header">
+            <button class="close-btn" onclick="hideConfirmModal()">&times;</button>
+        </div>
+        <p>Bạn có chắc chắn muốn xóa không?</p>
+        <div class="confirm-modal-actions">
+            <button style="background:#dc3545" onclick="hideConfirmModal()">Hủy</button>
+            <button style="background:#28a745" id="confirm-delete-btn">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('edit-table-body').addEventListener('input', function(e) {
+        if (e.target.classList.contains('don-gia-edit') || e.target.classList.contains('so-luong-edit')) {
+            const row = e.target.closest('tr');
+            const dg = parseInt(row.querySelector('.don-gia-edit').value.replace(/\./g, '')) || 0;
+            const sl = parseInt(row.querySelector('.so-luong-edit').value) || 0;
+            row.querySelector('.thanh-tien-edit').value = (dg * sl).toLocaleString('vi-VN');
+            updateTotal();
+        }
+    });
+
+    let rowToDelete = null;
+    function deleteRow(btn) {
+        const row = btn.closest('tr');
+        const tbody = document.getElementById('edit-table-body');
+        if (tbody.rows.length > 1) {
+            row.remove();
+            Array.from(tbody.rows).forEach((r, index) => { r.querySelector('.stt').value = index + 1; });
+            updateTotal();
+        } else {
+            rowToDelete = row;
+            document.getElementById('confirm-delete-modal').classList.add('show');
+        }
+    }
+
+    function hideConfirmModal() {
+        document.getElementById('confirm-delete-modal').classList.remove('show');
+        rowToDelete = null;
+    }
+
+    document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+        if (rowToDelete) {
+            rowToDelete.querySelectorAll('input').forEach(i => { if(!i.classList.contains('stt')) i.value = ''; });
+            updateTotal();
+        }
+        hideConfirmModal();
+    });
+
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('.thanh-tien-edit').forEach(i => { total += parseInt(i.value.replace(/\./g, '')) || 0; });
+        document.getElementById('tong-tien-edit').innerText = total.toLocaleString('vi-VN') + ' đ';
+    }
+</script>
+{% endblock %}
