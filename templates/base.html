@@ -1,0 +1,136 @@
+{% load static %}
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}ALEX Paint System{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+    <script src="{% static 'js/base.js' %}" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <img class="logo" src="{% static 'img/alex-logo.jpg' %}" alt="ALEX">
+        <div class="slogan">Sơn Alex sơn để Thành Công</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-user">
+          <div class="topbar-user-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+        </div>
+        <button class="icon-btn" type="button" aria-label="Thông báo">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3a5 5 0 0 0-5 5v3.6l-1.6 2.7a1 1 0 0 0 .86 1.5h11.5a1 1 0 0 0 .86-1.5L17 11.6V8a5 5 0 0 0-5-5zm0 18a2.2 2.2 0 0 0 2.1-1.6H9.9A2.2 2.2 0 0 0 12 21z" fill="currentColor"/>
+            </svg>
+          </span>
+        </button>
+        <button class="icon-btn" type="button" aria-label="Đăng xuất">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 4h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7v-2h7V6h-7V4zm-1.3 5.3 1.4 1.4L8.8 12H4v2h4.8l1.3 1.3-1.4 1.4L5 12l3.7-2.7z" fill="currentColor"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-user">
+          <div class="avatar-circle">
+              {{ request.user.username|slice:":2"|upper }}
+          </div>
+          <div>
+            <div class="sidebar-user-name">{{ request.user.username }}</div>
+            <div class="sidebar-user-role">{{ request.user.get_vai_tro_display|default:"Thành viên" }}</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+
+        <nav class="menu">
+          <div class="menu-group is-open" data-collapsible>
+            <button class="menu-title" type="button">
+              <span class="menu-icon" aria-hidden="true"></span>
+              Xuất - nhập hàng
+              <span class="chevron" aria-hidden="true"></span>
+            </button>
+            <ul class="menu-items">
+              <li><a href="#">Xuất kho</a></li>
+              <li><a href="#">Phiếu xuất kho</a></li>
+              <li><a href="#">Đơn đặt hàng KH</a></li>
+              <li><a href="#">Nhập kho</a></li>
+              <li><a href="#">Phiếu nhập kho</a></li>
+              <li><a href="#">Đơn đặt hàng NCC</a></li>
+            </ul>
+          </div>
+
+          <div class="menu-group">
+            <a class="menu-title {% block menu_suppliers_active %}{% endblock %}" href="/suppliers/">
+              <span class="menu-icon" aria-hidden="true"></span>
+              Quản lý Nhà Cung Cấp
+            </a>
+          </div>
+
+          <div class="menu-group is-open" data-collapsible>
+            <button class="menu-title" type="button">
+              <span class="menu-icon" aria-hidden="true"></span>
+              Quản lý sản phẩm
+              <span class="chevron" aria-hidden="true"></span>
+            </button>
+            <ul class="menu-items">
+              <li><a href="{% url 'danh_muc_sp' %}">Danh mục sản phẩm</a></li>
+              <li><a href="{% url 'canh_bao_ton_kho' %}">Cảnh báo tồn kho</a></li>
+              <li><a href="{% url 'canh_bao_han_su_dung' %}">Cảnh báo hạn sử dụng</a></li>
+            </ul>
+          </div>
+
+          <div class="menu-group is-open" data-collapsible>
+            <button class="menu-title" type="button">
+              <span class="menu-icon" aria-hidden="true"></span>
+              Báo cáo thống kê
+              <span class="chevron" aria-hidden="true"></span>
+            </button>
+            <ul class="menu-items">
+              <li><a href="{% url 'bao_cao_nhap_kho' %}">Báo cáo nhập kho</a></li>
+              <li><a href="{% url 'bao_cao_xuat_kho' %}">Báo cáo xuất kho</a></li>
+              <li><a href="{% url 'bao_cao_doanh_thu' %}">Báo cáo doanh thu</a></li>
+            </ul>
+          </div>
+
+          <div class="menu-group">
+            <a class="menu-title {% block menu_accounts_active %}{% endblock %}" href="{% url 'accounts_list' %}">
+              <span class="menu-icon" aria-hidden="true"></span>
+              Quản lý Tài khoản
+            </a>
+          </div>
+
+          <div class="menu-group">
+            <button class="menu-title" type="button">
+              <span class="menu-icon" aria-hidden="true"></span>
+              Trạng thái giao hàng
+            </button>
+          </div>
+
+          <div class="menu-group">
+            <button class="menu-title" type="button">
+              <span class="menu-icon" aria-hidden="true"></span>
+              Kiểm kê kho
+            </button>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main">
+        {% block content %}
+        <div class="content-card">Vui lòng chọn nghiệp vụ để thực hiện</div>
+        {% endblock %}
+      </main>
+    </div>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

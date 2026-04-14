@@ -1,0 +1,87 @@
+/* Tổng thể khung nội dung */
+.content-wrapper {
+    padding: 20px;
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+/* Thanh tiêu đề xanh đậm sát lề trái */
+.header-banner {
+    background-color: #1a1a9a;
+    color: white;
+    padding: 12px 25px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    text-align: left; /* Sát lề trái */
+}
+
+/* Khung viền bao quanh bảng */
+.table-container {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+/* Định dạng bảng */
+.alex-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+/* Header của bảng */
+.alex-table th {
+    background-color: #1a1a9a;
+    color: white;
+    padding: 15px 10px;
+    border: 1px solid #ffffff;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Các ô dữ liệu */
+.alex-table td {
+    padding: 12px 10px;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Căn trái cho cột tên sản phẩm */
+.text-left {
+    text-align: left !important;
+    padding-left: 20px !important;
+}
+
+/* Nhãn trạng thái (Badge) */
+.badge {
+    padding: 6px 0;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 13px;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+}
+
+/* Màu vàng cho Thiếu nhẹ */
+.warning {
+    background-color: #ffe082;
+    color: #000;
+}
+
+/* Màu đỏ cho Nguy cấp */
+.danger {
+    background-color: #ef5350;
+    color: #fff;
+}
+
+/* Dòng trống thông báo */
+.empty-message {
+    padding: 40px !important;
+    color: #888;
+    font-style: italic;
+}
