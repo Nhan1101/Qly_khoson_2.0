@@ -5,14 +5,13 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    /* Điều chỉnh container để nằm gọn trong Dashboard và có thể scroll */
     .phieu-nhap-container {
         box-sizing: border-box;
         font-family: Arial, sans-serif;
         display: flex;
         justify-content: center;
         padding: 20px;
-        width: 100%; /* Thay đổi từ 1300px thành 100% */
+        width: 100%;
         overflow-x: auto;
     }
     .phieu-modal {
@@ -27,7 +26,6 @@
     .phieu-header { text-align: center; padding: 22px 0 18px 0; position: relative; }
     .phieu-header h2 { font-size: 18px; font-weight: 700; color: #000; margin: 0; }
 
-    /* Nút X đóng phiếu về lại danh sách */
     .btn-close-phieu {
         position: absolute;
         top: 15px;
@@ -37,6 +35,8 @@
         color: #000;
         cursor: pointer;
         text-decoration: none;
+        background: none;
+        border: none;
     }
 
     .info-box { background-color: #e8e8e8; border: 1px solid #777; margin: 0 20px 15px 20px; padding: 16px 20px 24px 20px; }
@@ -46,7 +46,6 @@
     .form-group-phieu { display: flex; justify-content: space-between; align-items: flex-start; }
     .form-group-phieu label { font-size: 13px; margin-top: 5px; color: #000; white-space: nowrap; }
     .input-box-phieu { width: 220px; height: 28px; border: 1px solid #5a5eb9; outline: none; font-size: 14px; padding: 0 6px; color: #000; }
-    .select-box-phieu { background-color: #ffffff; cursor: pointer; }
     .disabled-box-phieu { background-color: #cecece; pointer-events: none; }
     textarea.input-box-phieu { height: 55px; resize: none; padding: 6px; }
 
@@ -60,13 +59,13 @@
 
     .total-wrapper-phieu { display: flex; justify-content: flex-end; padding: 0 35px; margin-bottom: 30px; }
     .total-box-phieu { background-color: #e8e8e8; border-radius: 15px; width: 340px; display: flex; justify-content: space-between; padding: 10px 25px; font-weight: 700; font-size: 16px; }
-    .btn-save-phieu { background-color: #0b00a8; color: white !important; border: none; border-radius: 8px; padding: 12px 50px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; }
+    .btn-save-phieu { background-color: #0b00a8; color: white !important; border: none; border-radius: 8px; padding: 12px 50px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
 
     /* Modal Xóa */
     .confirm-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; visibility: hidden; opacity: 0; transition: opacity 0.3s; }
     .confirm-modal-overlay.show { visibility: visible; opacity: 1; }
     .confirm-modal-content { background: #ffffff; border-radius: 8px; padding: 10px 20px 25px 20px; width: 380px; position: relative; }
-    .confirm-header { display: flex; justify-content: flex-end; } /* Đưa dấu X sang phải */
+    .confirm-header { display: flex; justify-content: flex-end; }
     .close-btn { background: none; border: none; font-size: 22px; font-weight: bold; cursor: pointer; color: #555; }
     .confirm-modal-actions { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
     .confirm-modal-actions button { padding: 9px 30px; border: none; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; color: #ffffff; }
@@ -74,7 +73,7 @@
 
 <div class="phieu-nhap-container">
     <div class="phieu-modal">
-        <a href="{% url 'nhap_kho' %}" class="btn-close-phieu">X</a>
+        <button type="button" onclick="location.href='{% url 'nhap_kho' %}'" class="btn-close-phieu">X</button>
         <div class="phieu-header"><h2>PHIẾU NHẬP KHO</h2></div>
 
         <div class="info-box">
@@ -83,7 +82,7 @@
                 <div class="info-col">
                     <div class="form-group-phieu">
                         <label>Nhà cung cấp</label>
-                        <select id="select-ncc" class="input-box-phieu select-box-phieu">
+                        <select id="select-ncc" class="input-box-phieu">
                             <option value="">Chọn nhà cung cấp</option>
                             <option value="A">Nhà cung cấp A</option>
                         </select>
@@ -138,7 +137,7 @@
             <div class="total-box-phieu"><span>TỔNG TIỀN:</span><span id="tong-tien">0 đ</span></div>
         </div>
         <div class="action-row-save" style="display: flex; justify-content: flex-end; padding-right: 35px;">
-            <a href="{% url 'nhap_kho' %}" class="btn-save-phieu">Lưu</a>
+            <button type="button" onclick="location.href='{% url 'nhap_kho' %}'" class="btn-save-phieu">Lưu</button>
         </div>
     </div>
 </div>
@@ -155,7 +154,6 @@
 </div>
 
 <script>
-    // Chọn nhà cung cấp hiện thông tin
     document.getElementById('select-ncc').addEventListener('change', function() {
         if (this.value === 'A') {
             document.getElementById('ma-phieu').value = 'NK' + Date.now().toString().slice(-6);
@@ -168,18 +166,15 @@
         }
     });
 
-    // Thêm hàng mới
     document.getElementById('btn-add-row').addEventListener('click', function() {
         const tbody = document.getElementById('table-body');
         const firstRow = tbody.querySelector('tr');
         const newRow = firstRow.cloneNode(true);
-
         newRow.querySelectorAll('input').forEach(input => {
             if (!input.classList.contains('dvt')) input.value = '';
             if (input.classList.contains('dvt')) input.value = 'thùng';
         });
         newRow.querySelector('select').selectedIndex = 0;
-
         tbody.appendChild(newRow);
         updateSTT();
         attachCalculations(newRow);
@@ -195,17 +190,14 @@
         const dgInput = row.querySelector('.don-gia');
         const slInput = row.querySelector('.so-luong');
         const ttInput = row.querySelector('.thanh-tien');
-
         const calculate = () => {
             const dg = parseFloat(dgInput.value) || 0;
             const sl = parseFloat(slInput.value) || 0;
             ttInput.value = (dg * sl).toLocaleString('vi-VN');
             updateTotalAll();
         };
-
         dgInput.addEventListener('input', calculate);
         slInput.addEventListener('input', calculate);
-
         row.querySelector('.select-item').addEventListener('change', function() {
             if (this.value) row.querySelector('.ma-hang').value = 'MH-' + this.value;
         });
@@ -220,7 +212,6 @@
         document.getElementById('tong-tien').innerText = total.toLocaleString('vi-VN') + ' đ';
     }
 
-    // Khởi tạo cho hàng đầu tiên
     attachCalculations(document.querySelector('#table-body tr'));
 
     let rowToDelete = null;
