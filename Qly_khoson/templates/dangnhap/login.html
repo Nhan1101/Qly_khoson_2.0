@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <!doctype html>
 <html lang="vi">
 <head>
@@ -20,11 +21,7 @@
 
     <div class="login-container">
         <div class="login-poster">
-            <div class="poster-content">
-                <h2 class="poster-title">HƠN 25 NĂM BÊN BỈ</h2>
-                <p class="poster-subtitle">tô điểm mầu ắm người Việt</p>
-            </div>
-            <img src="{% static 'img/alex-paint-poster.png' %}" alt="Alex Paint Products" class="poster-image">
+            <img src="{% static 'img/anh-dangnhap.png' %}" alt="ALEX Paint" class="poster-image">
         </div>
 
         <div class="login-form-wrapper">
@@ -55,24 +52,24 @@
                     {% csrf_token %}
 
                     <div class="form-group">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
-                        {{ form.username }}
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Tên đăng nhập</label>
+                        {{ form.username|add_class:"login-input" }}
                         {% if form.username.errors %}
                             <div class="form-error">
                                 {% for error in form.username.errors %}
-                                    {{ error }}
+                                    <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
                         {% endif %}
                     </div>
 
                     <div class="form-group">
-                        <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
-                        {{ form.password }}
+                        <label for="{{ form.password.id_for_label }}" class="form-label">Mật khẩu</label>
+                        {{ form.password|add_class:"login-input" }}
                         {% if form.password.errors %}
                             <div class="form-error">
                                 {% for error in form.password.errors %}
-                                    {{ error }}
+                                    <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
                         {% endif %}
@@ -85,4 +82,3 @@
     </div>
 </body>
 </html>
-

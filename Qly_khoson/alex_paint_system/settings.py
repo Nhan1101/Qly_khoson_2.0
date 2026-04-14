@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'suppliers.apps.SuppliersConfig',
     'QuanLyTaiKhoa.apps.QuanLyTaiKhoaConfig',
     'QuanLyKiemKe.apps.QuanLyKiemKeConfig',
@@ -125,3 +126,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+# Authentication settings
+LOGIN_URL = 'dang-nhap:login'
+LOGOUT_REDIRECT_URL = 'dang-nhap:login'
+
