@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block title %}Sơn Alex - Danh sách phiếu nhập{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .page-card {
+        background-color: transparent; /* Trong suốt */
+        border-radius: 0;
+        padding: 20px 40px;
+        position: relative;
+        box-shadow: none; /* Bỏ đổ bóng */
+    }
+
+    .filter-section {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        display: grid;
+        grid-template-columns: auto 150px auto 180px auto 180px auto;
+        align-items: center;
+        column-gap: 20px;
+        row-gap: 16px;
+    }
+
+    .filter-section label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        white-space: nowrap;
+    }
+
+    .filter-control {
+        background-color: #eaeaea;
+        border: none;
+        border-radius: 6px;
+        height: 38px;
+        font-size: 14px;
+        padding: 0 12px;
+        outline: none;
+        width: 100%;
+    }
+
+    select.filter-control {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23111' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 32px center;
+        padding-right: 32px;
+        cursor: pointer;
+    }
+
+    .date-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .date-input-wrapper i {
+        position: absolute;
+        right: 12px;
+        color: #11149e;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .btn-search {
+        grid-column: 7;
+        grid-row: 1 / 3;
+        background-color: #94a3f8;
+        color: #333;
+        border: none;
+        border-radius: 6px;
+        height: 92px;
+        padding: 0 25px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-left: 10px;
+    }
+
+    .action-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+
+    .btn-create {
+        background-color: #11149e;
+        color: #ffffff !important;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .table-container {
+        background: #ffffff;
+        border: 1px solid #ddd;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .data-table th, .data-table td {
+        border: 1px solid #ddd;
+        padding: 12px 10px;
+        font-size: 14px;
+    }
+
+    .data-table th { background-color: #11149e; color: #ffffff; }
+
+    .sort-icon-box {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #0b0f77;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        margin-left: 8px;
+    }
+
+    .data-table tbody tr:hover { background-color: #f5f6ff; }
+    .text-left { text-align: left; padding-left: 20px; }
+    .action-icons { display: flex; justify-content: center; gap: 16px; font-size: 18px; }
+    .icon-edit { color: #11149e; cursor: pointer; text-decoration: none; }
+    .icon-delete { color: #eb0000; cursor: pointer; border: none; background: none; padding: 0; }
+
+    .ma-phieu-link {
+        color: #11149e;
+        text-decoration: underline;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .confirm-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.3s ease-in-out;
+    }
+
+    .confirm-modal-overlay.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .confirm-modal-content {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 25px 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        width: 380px;
+        text-align: center;
+        position: relative;
+    }
+
+    .confirm-modal-content .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #888;
+        cursor: pointer;
+        background: none;
+        border: none;
+    }
+
+    .confirm-modal-content p {
+        font-size: 16px;
+        margin-bottom: 25px;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .confirm-modal-actions {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+    }
+
+    .confirm-modal-actions button {
+        padding: 10px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #ffffff;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .confirm-modal-actions .btn-cancel {
+        background-color: #dc3545;
+    }
+    .confirm-modal-actions .btn-cancel:hover {
+        background-color: #c82333;
+    }
+
+    .confirm-modal-actions .btn-confirm {
+        background-color: #28a745;
+    }
+    .confirm-modal-actions .btn-confirm:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="page-card">
+    <div class="filter-section">
+        <label style="grid-column: 1; grid-row: 1;">Mã phiếu</label>
+        <input type="text" class="filter-control" style="grid-column: 2; grid-row: 1;">
+
+        <label style="grid-column: 3; grid-row: 1; padding-left: 20px;">Nguồn xuất</label>
+        <select class="filter-control" style="grid-column: 4 / 7; grid-row: 1; width: 450px;">
+            <option value=""></option>
+            <option>Nhà cung cấp A</option>
+        </select>
+
+        <label style="grid-column: 1; grid-row: 2;">Tình trạng</label>
+        <select class="filter-control" style="grid-column: 2; grid-row: 2;">
+            <option value=""></option>
+            <option>Đã nhập</option>
+        </select>
+
+        <label style="grid-column: 3; grid-row: 2; padding-left: 20px;">Từ ngày</label>
+        <div class="date-input-wrapper" style="grid-column: 4; grid-row: 2;">
+            <input type="text" class="filter-control">
+            <i class="fa-regular fa-calendar-days"></i>
+        </div>
+
+        <label style="grid-column: 5; grid-row: 2; padding-left: 10px;">Đến ngày</label>
+        <div class="date-input-wrapper" style="grid-column: 6; grid-row: 2;">
+            <input type="text" class="filter-control">
+            <i class="fa-regular fa-calendar-days"></i>
+        </div>
+
+        <button class="btn-search">
+            Tìm kiếm <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
+
+    <div class="action-row">
+        <a href="{% url 'tao_phieu_nhap' %}" class="btn-create">
+            <i class="fa-solid fa-plus"></i> Tạo phiếu nhập kho
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 75px;">STT</th>
+                    <th style="width: 155px;">Mã phiếu</th>
+                    <th class="text-left">Nguồn xuất</th>
+                    <th>Giá trị <span class="sort-icon-box"><i class="fa-solid fa-arrow-down-short-wide"></i></span></th>
+                    <th>Thời gian <span class="sort-icon-box"><i class="fa-solid fa-arrow-down-short-wide"></i></span></th>
+                    <th>Thao tác <span class="sort-icon-box"><i class="fa-solid fa-arrow-down-z-a"></i></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in "12345678901" %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'xem_phieu' %}" class="ma-phieu-link">XXXXXX</a></td>
+                    <td class="text-left">Nhà cung cấp A</td>
+                    <td>50.000.000</td>
+                    <td>13/11/2022 &nbsp;&nbsp; 15:30</td>
+                    <td>
+                        <div class="action-icons">
+                            <a href="{% url 'sua_phieu_nhap' %}" class="icon-edit">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                            <button class="icon-delete" onclick="showDeleteModal(this)">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="confirm-modal-overlay" id="confirm-delete-modal">
+    <div class="confirm-modal-content">
+        <button class="close-btn" onclick="hideDeleteModal()">&times;</button>
+        <p>Bạn có chắc chắn muốn xóa không</p>
+        <div class="confirm-modal-actions">
+            <button class="btn-cancel" onclick="hideDeleteModal()">Hủy</button>
+            <button class="btn-confirm" id="confirm-delete-btn">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentRowToDelete = null;
+
+    function showDeleteModal(btn) {
+        currentRowToDelete = btn.closest('tr');
+        document.getElementById('confirm-delete-modal').classList.add('show');
+    }
+
+    function hideDeleteModal() {
+        document.getElementById('confirm-delete-modal').classList.remove('show');
+        currentRowToDelete = null;
+    }
+
+    document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+        if (currentRowToDelete) {
+            currentRowToDelete.remove();
+            const rows = document.querySelectorAll('.data-table tbody tr');
+            rows.forEach((row, index) => {
+                row.cells[0].innerText = index + 1;
+            });
+        }
+        hideDeleteModal();
+    });
+</script>
+{% endblock %}

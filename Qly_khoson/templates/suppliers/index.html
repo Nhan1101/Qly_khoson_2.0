@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Quản lý Nhà Cung Cấp{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/suppliers.css' %}">
+{% endblock %}
+
+{% block menu_suppliers_active %}is-active{% endblock %}
+
+{% block content %}
+  <section class="suppliers">
+    <div class="search-card">
+      <form id="searchForm" method="get" action="">
+        <div class="search-grid">
+          <label>
+            <span>Mã</span>
+            <input type="text" name="ma_ncc" placeholder="NCC_01" value="{{ request.GET.ma_ncc|default:'' }}">
+          </label>
+          <label>
+            <span>Tên nhà cung cấp</span>
+            <input type="text" name="ten_ncc" placeholder="Nhà cung cấp A" value="{{ request.GET.ten_ncc|default:'' }}">
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" placeholder="ncc@email.com" value="{{ request.GET.email|default:'' }}">
+          </label>
+          <label>
+            <span>Số điện thoại</span>
+            <input type="text" name="so_dien_thoai" placeholder="0389xxxxxx" value="{{ request.GET.so_dien_thoai|default:'' }}">
+          </label>
+          <label class="full">
+            <span>Địa chỉ</span>
+            <input type="text" name="dia_chi" placeholder="Mỹ An - Ngũ Hành Sơn - ĐN" value="{{ request.GET.dia_chi|default:'' }}">
+          </label>
+          <div class="search-actions">
+            <button class="btn-primary" type="submit">Tìm kiếm</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn-secondary" type="button">+ Thêm mới nguồn</button>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Tên nhà cung cấp</th>
+            <th>SĐT</th>
+            <th>Email</th>
+            <th>Địa chỉ</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for supplier in suppliers %}
+          <tr data-id="{{ supplier.id }}">
+            <td>{{ supplier.ma_ncc }}</td>
+            <td>{{ supplier.ten_ncc }}</td>
+            <td>{{ supplier.so_dien_thoai }}</td>
+            <td>{{ supplier.email }}</td>
+            <td>{{ supplier.dia_chi }}</td>
+            <td class="actions">
+              <button class="icon-edit" type="button" aria-label="Sửa"></button>
+              <button class="icon-delete" type="button" aria-label="Xóa"></button>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="empty">Chưa có dữ liệu nhà cung cấp.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Trước</a>
+      {% else %}
+        <span class="page-link is-disabled">Trước</span>
+      {% endif %}
+      <span class="page-info">Trang {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sau</a>
+      {% else %}
+        <span class="page-link is-disabled">Sau</span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Popup Thêm nhà cung cấp -->
+    <div id="supplierPopup" class="popup-overlay">
+      <div class="popup-content">
+        <button class="popup-close" id="closeSupplierPopup">&times;</button>
+        <h3 id="popupTitle">Thêm nhà cung cấp</h3>
+        <form id="supplierForm" method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="supplier_id" id="supplierIdInput">
+          <div class="popup-grid">
+            <label>
+              <span>Tên nhà cung cấp</span>
+              <input type="text" name="ten_ncc" id="tenNccInput" required>
+            </label>
+            <label>
+              <span>Số điện thoại</span>
+              <input type="text" name="so_dien_thoai" id="soDienThoaiInput" required>
+            </label>
+            <label class="full">
+              <span>Email</span>
+              <input type="email" name="email" id="emailInput">
+            </label>
+            <label class="full">
+              <span>Địa chỉ</span>
+              <input type="text" name="dia_chi" id="diaChiInput">
+            </label>
+          </div>
+          <div style="text-align:center;margin-top:16px;">
+            <button type="submit" class="btn-primary" style="background:#19c37d;color:#fff;min-width:90px;">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const supplierPopup = document.getElementById('supplierPopup');
+    const closeSupplierPopup = document.getElementById('closeSupplierPopup');
+    const addSupplierBtn = document.querySelector('.btn-secondary');
+    const supplierForm = document.getElementById('supplierForm');
+
+    // Mở popup khi bấm nút
+    addSupplierBtn.onclick = function(e) {
+      e.preventDefault();
+      document.getElementById('popupTitle').innerText = 'Thêm nhà cung cấp';
+      document.getElementById('supplierIdInput').value = '';
+      document.getElementById('tenNccInput').value = '';
+      document.getElementById('emailInput').value = '';
+      document.getElementById('soDienThoaiInput').value = '';
+      document.getElementById('diaChiInput').value = '';
+      supplierPopup.classList.add('show');
+    }
+
+    // Đóng popup khi bấm nút đóng
+    closeSupplierPopup.onclick = function(e) {
+      e.preventDefault();
+      supplierPopup.classList.remove('show');
+    }
+
+    // Đóng popup khi click ra ngoài (trên overlay)
+    supplierPopup.onclick = function(e) {
+      if (e.target === supplierPopup) {
+        supplierPopup.classList.remove('show');
+      }
+    }
+
+    // SỬA nhà cung cấp
+    document.querySelectorAll('.icon-edit').forEach((btn, idx) => {
+      btn.onclick = function() {
+        const row = btn.closest('tr');
+        const tds = row.querySelectorAll('td');
+        document.getElementById('popupTitle').innerText = 'Sửa nhà cung cấp';
+        document.getElementById('supplierIdInput').value = row.dataset.id;
+        document.getElementById('tenNccInput').value = tds[1].innerText;
+        document.getElementById('emailInput').value = tds[3].innerText;
+        document.getElementById('soDienThoaiInput').value = tds[2].innerText;
+        document.getElementById('diaChiInput').value = tds[4].innerText;
+        supplierPopup.classList.add('show');
+      }
+    });
+
+    // XOÁ nhà cung cấp
+    document.querySelectorAll('.icon-delete').forEach((btn, idx) => {
+      btn.onclick = function() {
+        const row = btn.closest('tr');
+        const id = row.dataset.id;
+        if (confirm('Bạn có chắc muốn xoá nhà cung cấp này?')) {
+          fetch(`/suppliers/${id}/delete/`, {method: 'POST', headers: {'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value}})
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) window.location.reload();
+              else alert('Xoá thất bại!');
+            });
+        }
+      }
+    });
+
+    // Gửi form thêm/sửa nhà cung cấp bằng AJAX
+    supplierForm.onsubmit = async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const id = document.getElementById('supplierIdInput').value;
+      let url = id ? `/suppliers/${id}/update/` : "{% url 'supplier_create' %}";
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData
+        });
+        const result = await response.json();
+        if (result.success) {
+          alert(id ? 'Cập nhật thành công!' : 'Thêm nhà cung cấp thành công!');
+          supplierForm.reset();
+          supplierPopup.classList.remove('show');
+          setTimeout(() => window.location.reload(), 500);
+        } else {
+          alert(result.error || 'Có lỗi xảy ra!');
+        }
+      } catch (error) {
+        alert('Lỗi gửi yêu cầu: ' + error);
+      }
+    }
+  </script>
+{% endblock %}
