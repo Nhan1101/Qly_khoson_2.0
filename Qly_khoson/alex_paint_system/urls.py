@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='base.html'), name='home'),
+    path('', login_required(TemplateView.as_view(template_name='base.html'), login_url='login'), name='home'),
+    path('dang-nhap/', include('DangNhap.urls')),
     path('suppliers/', include('suppliers.urls')),
     path('quan-ly-tai-khoa/', include('QuanLyTaiKhoa.urls')),
     path('quan-ly-kiem-ke/', include('QuanLyKiemKe.urls')),
     path('admin/', admin.site.urls),
 ]
-

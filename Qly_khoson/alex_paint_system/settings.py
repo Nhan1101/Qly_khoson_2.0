@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'suppliers.apps.SuppliersConfig',
     'QuanLyTaiKhoa.apps.QuanLyTaiKhoaConfig',
     'QuanLyKiemKe.apps.QuanLyKiemKeConfig',
+    'DangNhap.apps.DangNhapConfig',
 ]
 
 AUTH_USER_MODEL = 'suppliers.NguoiDung'
@@ -124,4 +125,3 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-

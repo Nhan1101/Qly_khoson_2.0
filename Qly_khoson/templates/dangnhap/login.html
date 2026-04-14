@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng nhập - ALEX Paint System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <img class="logo" src="{% static 'img/alex-logo.jpg' %}" alt="ALEX">
+            <div class="slogan">Sơn Alex sơn để Thành Công</div>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <div class="login-poster">
+            <div class="poster-content">
+                <h2 class="poster-title">HƠN 25 NĂM BÊN BỈ</h2>
+                <p class="poster-subtitle">tô điểm mầu ắm người Việt</p>
+            </div>
+            <img src="{% static 'img/alex-paint-poster.png' %}" alt="Alex Paint Products" class="poster-image">
+        </div>
+
+        <div class="login-form-wrapper">
+            <div class="login-form-container">
+                <h1 class="login-title">ĐĂNG NHẬP VÀO TÀI KHOẢN</h1>
+
+                {% if messages %}
+                    <div class="alerts">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags|default:'info' }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if form.non_field_errors %}
+                    <div class="alerts">
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post" class="login-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="form-error">
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="form-error">
+                                {% for error in form.password.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="login-btn">ĐĂNG NHẬP</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
