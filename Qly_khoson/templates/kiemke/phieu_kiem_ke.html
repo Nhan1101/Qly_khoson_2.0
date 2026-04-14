@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Phiếu Kiểm Kê Kho{% endblock %}
+
+{% block content %}
+<section class="phieu-kiem-ke">
+  <div class="phieu-header">
+    <h1>PHIẾU KIỂM KÊ KHO</h1>
+    <div class="phieu-info">
+      <p><strong>Mã phiếu:</strong> {{ phieu.ma_phieu|default:"KK00001" }}</p>
+      <p><strong>Ngày kiểm kê:</strong> {{ phieu.ngay_kiem_ke|default:"01/01/2024" }}</p>
+      <p><strong>Người kiểm kê:</strong> {{ phieu.nguoi_kiem_ke|default:"Nguyễn Văn A" }}</p>
+    </div>
+  </div>
+
+  <table class="kiem-ke-table">
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Tên sản phẩm</th>
+        <th>Đơn vị tính</th>
+        <th>Số lượng hệ thống</th>
+        <th>Số lượng thực tế</th>
+        <th>Chênh lệch</th>
+        <th>Lý do</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Sơn nội thất A</td>
+        <td>Lít</td>
+        <td>100</td>
+        <td>95</td>
+        <td>-5</td>
+        <td>Thiếu hụt</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Sơn ngoại thất B</td>
+        <td>Lít</td>
+        <td>50</td>
+        <td>50</td>
+        <td>0</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Sơn lót C</td>
+        <td>Lít</td>
+        <td>30</td>
+        <td>32</td>
+        <td>+2</td>
+        <td>Thừa</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="phieu-footer">
+    <div class="signature">
+      <p>Người kiểm kê</p>
+      <br><br>
+      (Ký, ghi rõ họ tên)
+    </div>
+    <div class="signature">
+      <p>Thủ kho</p>
+      <br><br>
+      (Ký, ghi rõ họ tên)
+    </div>
+  </div>
+</section>
+
+<style>
+.phieu-kiem-ke {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.phieu-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.phieu-header h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.phieu-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.kiem-ke-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.kiem-ke-table th, .kiem-ke-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: center;
+}
+
+.kiem-ke-table th {
+  background-color: #f0f0f0;
+}
+
+.phieu-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.signature {
+  text-align: center;
+  width: 45%;
+}
+</style>
+{% endblock %}

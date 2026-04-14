@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Kiểm kê kho{% endblock %}
+{% block menu_kiemke_active %}is-active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/kiemke.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="kiemke-page">
+  <form class="kiemke-filterbar" method="get">
+    <div class="filter-field">
+      <label for="id_ma_phieu">Mã Phiếu</label>
+      <input
+        id="id_ma_phieu"
+        name="ma_phieu"
+        type="text"
+        value="{{ filters.ma_phieu }}"
+        placeholder="KK00020">
+    </div>
+
+    <div class="filter-field">
+      <label for="id_ngay_tao">Ngày tạo</label>
+      <input
+        id="id_ngay_tao"
+        name="ngay_tao"
+        type="date"
+        value="{{ filters.ngay_tao }}">
+    </div>
+
+    <div class="filter-field">
+      <label for="id_nguoi_thuc_hien">Người thực hiện</label>
+      <input
+        id="id_nguoi_thuc_hien"
+        name="nguoi_thuc_hien"
+        type="text"
+        value="{{ filters.nguoi_thuc_hien }}"
+        placeholder="Nguyễn Văn B">
+    </div>
+
+    <button class="search-btn" type="submit">
+      Tìm kiếm
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l3.43 3.43 1.41-1.41-3.43-3.43A6.5 6.5 0 0 0 10.5 4zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z" fill="currentColor"/>
+      </svg>
+    </button>
+  </form>
+
+  <div class="kiemke-toolbar">
+    <div class="toolbar-note">Cập nhật lúc {{ updated_at|date:"H:i, d/m/Y" }}</div>
+    <button class="create-btn" id="createTicketBtn" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M11 5h2v14h-2zM5 11h14v2H5z" fill="currentColor"/>
+      </svg>
+      Tạo phiếu mới
+    </button>
+  </div>
+
+  <section class="kiemke-table-card">
+    <div class="table-wrap">
+      <table class="kiemke-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Mã Phiếu</th>
+            <th>Người thực hiện</th>
+            <th>
+              <span class="th-sort">
+                Thời gian
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 6h10v2H7zm3 5h7v2h-7zm4 5h3v2h-3z" fill="currentColor"/>
+                </svg>
+              </span>
+            </th>
+            <th>Tình trạng</th>
+            <th>Thao tác</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="kiemkeTableBody">
+          {% for ticket in tickets %}
+          <tr data-ticket-row>
+            <td>{{ ticket.display_index }}</td>
+            <td>{{ ticket.display_code }}</td>
+            <td>{{ ticket.nguoi_dung.get_full_name|default:ticket.nguoi_dung.username }}</td>
+            <td>{{ ticket.ngay_tao|date:"d/m/Y H:i" }}</td>
+            <td>
+              <span class="status-pill {{ ticket.display_status_class }}">{{ ticket.display_status }}</span>
+            </td>
+            <td>
+              <a class="action-link" href="{% url 'kiemke_detail' ticket.pk %}">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5c5.23 0 9.27 4.11 10 6.99C21.27 14.89 17.23 19 12 19S2.73 14.89 2 11.99C2.73 9.11 6.77 5 12 5zm0 2C8.26 7 5.19 9.82 4.1 12c1.09 2.18 4.16 5 7.9 5s6.81-2.82 7.9-5c-1.09-2.18-4.16-5-7.9-5zm0 2.5A2.5 2.5 0 1 1 12 14.5a2.5 2.5 0 0 1 0-5z" fill="currentColor"/>
+                </svg>
+                Xem chi tiết
+              </a>
+            </td>
+            <td>
+              <a class="action-icon action-print" href="#" aria-label="In phiếu">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 4h10v4H7V4zm10 6h1.5A2.5 2.5 0 0 1 21 12.5v3A2.5 2.5 0 0 1 18.5 18H17v2H7v-2H5.5A2.5 2.5 0 0 1 3 15.5v-3A2.5 2.5 0 0 1 5.5 10H7V8h10v2zm-2 8v-4H9v4h6zm2-4.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor"/>
+                </svg>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr class="empty-row" data-empty-row>
+            <td colspan="7" class="empty-cell">Chưa có phiếu kiểm kê phù hợp với bộ lọc hiện tại.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if is_paginated %}
+    <nav class="pagination" aria-label="Phân trang">
+      {% if page_obj.has_previous %}
+      <a class="page-arrow" href="?page={{ page_obj.previous_page_number }}{{ query_suffix }}" aria-label="Trang trước">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14.71 6.29 9 12l5.71 5.71-1.42 1.42L6.17 12l7.12-7.12z" fill="currentColor"/>
+        </svg>
+      </a>
+      {% else %}
+      <span class="page-arrow is-disabled" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14.71 6.29 9 12l5.71 5.71-1.42 1.42L6.17 12l7.12-7.12z" fill="currentColor"/>
+        </svg>
+      </span>
+      {% endif %}
+
+      {% for page_number in paginator.page_range %}
+        {% if page_number == page_obj.number %}
+        <span class="page-number is-active">{{ page_number }}</span>
+        {% else %}
+        <a class="page-number" href="?page={{ page_number }}{{ query_suffix }}">{{ page_number }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <a class="page-arrow" href="?page={{ page_obj.next_page_number }}{{ query_suffix }}" aria-label="Trang sau">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m9.29 17.71 5.71-5.71-5.71-5.71 1.42-1.42L17.83 12l-7.12 7.12z" fill="currentColor"/>
+        </svg>
+      </a>
+      {% else %}
+      <span class="page-arrow is-disabled" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m9.29 17.71 5.71-5.71-5.71-5.71 1.42-1.42L17.83 12l-7.12 7.12z" fill="currentColor"/>
+        </svg>
+      </span>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<template id="newTicketRowTemplate">
+  <tr class="inline-create-row" data-inline-row>
+    <td class="inline-index"></td>
+    <td>{{ next_ticket_code }}</td>
+    <td>
+      <form id="inlineCreateTicketForm" method="post" action="{% url 'kiemke_create' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      </form>
+      <select class="inline-select" name="nguoi_dung_id" form="inlineCreateTicketForm" required>
+        <option value="">Chọn người thực hiện</option>
+        {% for performer in performers %}
+        <option value="{{ performer.id }}">
+          {{ performer.get_full_name|default:performer.username }}
+        </option>
+        {% endfor %}
+      </select>
+    </td>
+    <td class="inline-time">--/--/---- --:--</td>
+    <td>
+      <span class="status-pill status-draft">Đang làm</span>
+    </td>
+    <td>
+      <button class="inline-save-btn" type="submit" form="inlineCreateTicketForm">Lưu</button>
+    </td>
+    <td>
+      <button class="inline-cancel-btn" type="button" data-inline-cancel>Hủy</button>
+    </td>
+  </tr>
+</template>
+<script src="{% static 'js/kiemke.js' %}"></script>
+{% endblock %}

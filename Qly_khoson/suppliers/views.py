@@ -18,7 +18,7 @@ class SupplierListView(ListView):
 
 class AccountListView(ListView):
     model = NguoiDung
-    template_name = "accounts/index.html"
+    template_name = "taikhoan/index.html"
     context_object_name = "accounts"
     paginate_by = 15
 
@@ -52,7 +52,7 @@ class AccountListView(ListView):
         params.pop("page", None)
         query_string = params.urlencode()
         ctx["query_suffix"] = f"&{query_string}" if query_string else ""
-        edit_url = reverse("account_edit", args=[0])
+        edit_url = reverse("taikhoan_edit", args=[0])
         ctx["edit_url_template"] = edit_url.replace("/0/", "/{id}/", 1)
         return ctx
 
@@ -60,7 +60,7 @@ class AccountListView(ListView):
 class AccountCreateView(View):
     def post(self, request, *args, **kwargs):
         form = AccountForm(request.POST, require_password=True)
-        next_url = request.POST.get("next") or reverse("accounts_list")
+        next_url = request.POST.get("next") or reverse("taikhoan_list")
         if form.is_valid():
             form.save()
             messages.success(request, "Đã tạo tài khoản.")
@@ -73,7 +73,7 @@ class AccountUpdateView(View):
     def post(self, request, pk, *args, **kwargs):
         user = get_object_or_404(NguoiDung, pk=pk)
         form = AccountForm(request.POST, instance=user)
-        next_url = request.POST.get("next") or reverse("accounts_list")
+        next_url = request.POST.get("next") or reverse("taikhoan_list")
         if form.is_valid():
             form.save()
             messages.success(request, "Đã cập nhật tài khoản.")
@@ -85,7 +85,7 @@ class AccountUpdateView(View):
 class AccountDeleteView(View):
     def post(self, request, pk, *args, **kwargs):
         user = get_object_or_404(NguoiDung, pk=pk)
-        next_url = request.POST.get("next") or reverse("accounts_list")
+        next_url = request.POST.get("next") or reverse("taikhoan_list")
         user.delete()
         messages.success(request, "Đã xoá tài khoản.")
         return redirect(next_url)

@@ -7,28 +7,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("modalPassword");
   const roleInput = document.getElementById("modalRole");
   const closeBtn = document.getElementById("closeModal");
-  const nextInput = accountForm?.querySelector('[name="next"]');
   const createBtn = document.getElementById("openModal");
-  const createUrl = accountForm?.dataset.createUrl;
-  const editUrlTemplate = accountForm?.dataset.editUrlTemplate;
+  const nextInput = accountForm ? accountForm.querySelector('[name="next"]') : null;
+  const createUrl = accountForm ? accountForm.dataset.createUrl : "";
+  const editUrlTemplate = accountForm ? accountForm.dataset.editUrlTemplate : "";
 
   if (!modal || !accountForm) {
     return;
   }
 
-  const currentLocation = () => window.location.pathname + window.location.search;
+  const currentLocation = () => `${window.location.pathname}${window.location.search}`;
 
-  const showModal = () => {
+  const openModal = () => {
     if (nextInput) {
       nextInput.value = currentLocation();
     }
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    modal.style.display = "flex";
   };
 
-  const hideModal = () => {
+  const closeModal = () => {
     modal.classList.remove("flex");
     modal.classList.add("hidden");
+    modal.style.display = "none";
   };
 
   const resetForm = () => {
@@ -38,22 +40,24 @@ document.addEventListener("DOMContentLoaded", () => {
     roleInput.value = "Admin";
   };
 
+  closeModal();
+
   if (createBtn) {
     createBtn.addEventListener("click", () => {
-      formTitle.innerText = "Tạo tài khoản";
+      formTitle.textContent = "Tạo tài khoản";
       accountForm.action = createUrl || accountForm.action;
       resetForm();
-      showModal();
+      openModal();
     });
   }
 
   if (closeBtn) {
-    closeBtn.addEventListener("click", hideModal);
+    closeBtn.addEventListener("click", closeModal);
   }
 
   modal.addEventListener("click", (event) => {
     if (event.target === modal) {
-      hideModal();
+      closeModal();
     }
   });
 
@@ -64,25 +68,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       const accountId = row.dataset.accountId;
-      const editUrl = editUrlTemplate ? editUrlTemplate.replace("{id}", accountId) : accountForm.action;
-      formTitle.innerText = "Chỉnh sửa tài khoản";
-      accountForm.action = editUrl;
+      formTitle.textContent = "Chỉnh sửa tài khoản";
+      accountForm.action = editUrlTemplate
+        ? editUrlTemplate.replace("{id}", accountId)
+        : accountForm.action;
       fullNameInput.value =
         row.dataset.fullName || row.querySelector("td:nth-child(2)")?.innerText.trim() || "";
       usernameInput.value = row.dataset.username || "";
       passwordInput.value = "";
       roleInput.value = row.dataset.role || "Admin";
-      showModal();
-    });
-  });
-
-  document.querySelectorAll(".account-delete-form").forEach((form) => {
-    form.addEventListener("submit", (event) => {
-      const accountName = form.dataset.accountName || "tài khoản";
-      const shouldDelete = window.confirm(`Bạn có chắc chắn muốn xóa ${accountName}?`);
-      if (!shouldDelete) {
-        event.preventDefault();
-      }
+      openModal();
     });
   });
 });

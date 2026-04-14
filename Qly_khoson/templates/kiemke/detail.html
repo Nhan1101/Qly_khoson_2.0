@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Chi tiết kiểm kê{% endblock %}
+{% block menu_kiemke_active %}is-active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/kiemke.css' %}">
+<link rel="stylesheet" href="{% static 'css/kiemke-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="kiemke-page">
+  <div class="ticket-info-bar">
+    <div class="ticket-info-field">
+      <label>Mã Phiếu</label>
+      <input type="text" value="{{ ticket.display_code }}" readonly>
+    </div>
+    <div class="ticket-info-field">
+      <label>Ngày tạo</label>
+      <input type="text" value="{{ ticket.ngay_tao|date:'d/m/Y H:i' }}" readonly>
+    </div>
+    <div class="ticket-info-field">
+      <label>Người thực hiện</label>
+      <input type="text" value="{{ ticket.nguoi_dung.get_full_name|default:ticket.nguoi_dung.username }}" readonly>
+    </div>
+    <div class="ticket-info-action">
+      <span class="status-pill {{ ticket.display_status_class }}">{{ ticket.display_status }}</span>
+    </div>
+  </div>
+
+  {% if messages %}
+  <div class="detail-feedback-stack">
+    {% for message in messages %}
+    <div class="detail-feedback {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if form_error %}
+  <div class="detail-feedback error">{{ form_error }}</div>
+  {% endif %}
+
+  <form method="post" class="detail-form">
+    {% csrf_token %}
+    <div class="detail-toolbar">
+      <button class="export-btn" type="button">Xuất file</button>
+      <div class="detail-actions">
+        {% if not is_readonly %}
+        <button class="save-btn" type="submit">Lưu phiếu</button>
+        {% endif %}
+        <a class="exit-btn" href="{% url 'kiemke_list' %}">Thoát</a>
+      </div>
+    </div>
+
+    <div class="detail-table-wrap">
+      <table class="kiemke-table detail-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên hàng hóa</th>
+            <th>DVT</th>
+            <th>Tồn hệ thống</th>
+            <th>Tồn thực tế</th>
+            <th>Chênh lệch</th>
+            <th>Lý do</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr class="detail-row" data-system-stock="{{ row.stock.so_luong_ton }}">
+            <td>{{ row.index }}</td>
+            <td class="product-cell">{{ row.stock.san_pham.ten_son }}</td>
+            <td>{{ row.stock.san_pham.don_vi_tinh }}</td>
+            <td class="system-stock">{{ row.stock.so_luong_ton }}</td>
+            <td>
+              <input
+                class="detail-number-input"
+                type="number"
+                name="{{ row.actual_name }}"
+                value="{{ row.actual_raw }}"
+                min="0"
+                {% if is_readonly %}disabled{% endif %}>
+              {% if row.actual_error %}
+              <div class="field-error">{{ row.actual_error }}</div>
+              {% endif %}
+            </td>
+            <td>
+              <span class="difference-badge{% if row.difference != '' %} is-visible{% endif %}">
+                {% if row.difference != '' %}
+                  {% if row.difference > 0 %}+{% endif %}{{ row.difference }}
+                {% endif %}
+              </span>
+            </td>
+            <td>
+              <input
+                class="detail-reason-input"
+                type="text"
+                name="{{ row.reason_name }}"
+                value="{{ row.reason_raw }}"
+                placeholder="Nhập lý do nếu tồn thực tế bị thiếu"
+                {% if is_readonly %}disabled{% endif %}>
+              {% if row.reason_error %}
+              <div class="field-error">{{ row.reason_error }}</div>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="empty-cell">Chưa có dữ liệu tồn kho để kiểm kê.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.kiemKeDetailReadonly = {{ is_readonly|yesno:"true,false" }};
+</script>
+<script src="{% static 'js/kiemke-detail.js' %}"></script>
+{% endblock %}

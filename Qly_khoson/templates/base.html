@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!doctype html>
 <html lang="vi">
   <head>
@@ -101,7 +101,7 @@
           </div>
 
           <div class="menu-group">
-            <a class="menu-title {% block menu_accounts_active %}{% endblock %}" href="{% url 'accounts_list' %}">
+            <a class="menu-title {% block menu_taikhoan_active %}{% endblock %}" href="{% url 'taikhoan_list' %}">
               <span class="menu-icon" aria-hidden="true"></span>
               Quản lý Tài khoản
             </a>
@@ -115,10 +115,10 @@
           </div>
 
           <div class="menu-group">
-            <button class="menu-title" type="button">
+            <a class="menu-title {% block menu_kiemke_active %}{% endblock %}" href="{% url 'kiemke_list' %}">
               <span class="menu-icon" aria-hidden="true"></span>
               Kiểm kê kho
-            </button>
+            </a>
           </div>
         </nav>
       </aside>
@@ -132,3 +132,4 @@
     {% block extra_js %}{% endblock %}
   </body>
 </html>
+Error 404 (Not Found)!!1
