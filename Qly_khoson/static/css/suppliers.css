@@ -169,6 +169,108 @@
   font-weight: 600;
 }
 
+/* ================= POPUP STYLES ================= */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.popup-overlay.show {
+  display: flex;
+}
+
+.popup-content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 32px 24px 24px 24px;
+  min-width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.popup-content h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #1a1f3c;
+  font-weight: 600;
+}
+
+.popup-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.popup-close:hover {
+  color: #333;
+}
+
+.popup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.popup-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #1a1f3c;
+}
+
+.popup-grid label span {
+  font-weight: 600;
+}
+
+.popup-grid input {
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid #d7d9e5;
+  padding: 0 10px;
+  background: #f8f8fa;
+  font-size: 13px;
+}
+
+.popup-grid input:focus {
+  outline: none;
+  border-color: #9aa4ff;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(154, 164, 255, 0.1);
+}
+
+.popup-grid label.full {
+  grid-column: 1 / span 2;
+}
+
 @media (max-width: 1100px) {
   .search-grid {
     grid-template-columns: 1fr 1fr;
