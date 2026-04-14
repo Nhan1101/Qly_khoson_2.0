@@ -166,7 +166,7 @@
                 {% for i in "12345678901" %}
                 <tr>
                     <td>{% if forloop.counter == 1 %}1{% elif forloop.counter == 2 %}3{% elif forloop.counter == 3 %}4{% elif forloop.counter == 4 %}5{% elif forloop.counter == 5 %}7{% elif forloop.counter == 6 %}8{% elif forloop.counter == 7 %}9{% elif forloop.counter == 8 %}10{% elif forloop.counter == 9 %}11{% elif forloop.counter == 10 %}12{% else %}13{% endif %}</td>
-                    <td><a href="{% url 'chi_tiet_don_dat_hang' %}" class="ma-don-link">XXXXXX</a></td>
+                    <td><a href="{% url 'chi_tiet_don_dat_hang' %}" class="ma-don-link">DH000{{ forloop.counter }}</a></td>
                     <td>{% if forloop.counter == 1 or forloop.counter == 3 or forloop.counter == 5 or forloop.counter == 8 or forloop.counter == 9 %}Nhà cung cấp A{% elif forloop.counter == 2 or forloop.counter == 10 %}Nhà cung cấp C{% elif forloop.counter == 4 %}Nhà cung cấp D{% elif forloop.counter == 6 or forloop.counter == 7 %}Nhà cung cấp E{% else %}Nhà cung cấp F{% endif %}</td>
                     <td>50.000.000</td>
                     <td>13/11/2022 &nbsp; 15:30</td>

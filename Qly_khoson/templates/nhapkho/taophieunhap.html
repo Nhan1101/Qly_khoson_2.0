@@ -5,39 +5,13 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    .phieu-nhap-container {
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        padding: 20px;
-        width: 100%;
-        overflow-x: auto;
-    }
-    .phieu-modal {
-        background: #ffffff;
-        width: 100%;
-        max-width: 1250px;
-        border: 1px solid #777;
-        position: relative;
-        padding-bottom: 30px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-    }
+    .phieu-nhap-container { box-sizing: border-box; font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; width: 100%; overflow-x: auto; }
+    .phieu-modal { background: #ffffff; width: 100%; max-width: 1250px; border: 1px solid #777; position: relative; padding-bottom: 30px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); }
     .phieu-header { text-align: center; padding: 22px 0 18px 0; position: relative; }
     .phieu-header h2 { font-size: 18px; font-weight: 700; color: #000; margin: 0; }
 
-    .btn-close-phieu {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #000;
-        cursor: pointer;
-        text-decoration: none;
-        background: none;
-        border: none;
-    }
+    .btn-close-phieu { position: absolute; top: 15px; right: 20px; font-size: 24px; font-weight: bold; color: #000; cursor: pointer; text-decoration: none; display: block; z-index: 999; }
+    .btn-close-phieu:hover { color: #eb0000; }
 
     .info-box { background-color: #e8e8e8; border: 1px solid #777; margin: 0 20px 15px 20px; padding: 16px 20px 24px 20px; }
     .info-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; margin-top: 0; }
@@ -46,8 +20,8 @@
     .form-group-phieu { display: flex; justify-content: space-between; align-items: flex-start; }
     .form-group-phieu label { font-size: 13px; margin-top: 5px; color: #000; white-space: nowrap; }
     .input-box-phieu { width: 220px; height: 28px; border: 1px solid #5a5eb9; outline: none; font-size: 14px; padding: 0 6px; color: #000; }
-    .disabled-box-phieu { background-color: #cecece; pointer-events: none; }
     textarea.input-box-phieu { height: 55px; resize: none; padding: 6px; }
+    .disabled-box-phieu { background-color: #cecece; pointer-events: none; }
 
     .add-btn-wrapper { display: flex; justify-content: flex-end; padding: 0 20px 12px 20px; }
     .btn-add-item { background-color: #4caf50; color: white; border: none; border-radius: 6px; padding: 8px 22px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
@@ -61,7 +35,6 @@
     .total-box-phieu { background-color: #e8e8e8; border-radius: 15px; width: 340px; display: flex; justify-content: space-between; padding: 10px 25px; font-weight: 700; font-size: 16px; }
     .btn-save-phieu { background-color: #0b00a8; color: white !important; border: none; border-radius: 8px; padding: 12px 50px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
 
-    /* Modal Xóa */
     .confirm-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; visibility: hidden; opacity: 0; transition: opacity 0.3s; }
     .confirm-modal-overlay.show { visibility: visible; opacity: 1; }
     .confirm-modal-content { background: #ffffff; border-radius: 8px; padding: 10px 20px 25px 20px; width: 380px; position: relative; }
@@ -73,8 +46,8 @@
 
 <div class="phieu-nhap-container">
     <div class="phieu-modal">
-        <button type="button" onclick="location.href='{% url 'nhap_kho' %}'" class="btn-close-phieu">X</button>
-        <div class="phieu-header"><h2>PHIẾU NHẬP KHO</h2></div>
+        <a href="{% url 'nhap_kho' %}" class="btn-close-phieu">X</a>
+        <div class="phieu-header"><h2>TẠO PHIẾU NHẬP KHO</h2></div>
 
         <div class="info-box">
             <h3>Thông tin chung</h3>
@@ -107,10 +80,9 @@
                     <th>Tên hàng hóa</th>
                     <th style="width: 100px;">Mã hàng</th>
                     <th style="width: 120px;">Số lô</th>
-                    <th style="width: 110px;">NSX</th>
-                    <th style="width: 110px;">HSD</th>
-                    <th style="width: 80px;">SL Tồn</th>
-                    <th style="width: 80px;">Đơn vị tính</th>
+                    <th style="width: 120px;">NSX</th>
+                    <th style="width: 120px;">HSD</th>
+                    <th style="width: 80px;">ĐVT</th>
                     <th style="width: 110px;">Đơn giá</th>
                     <th style="width: 90px;">Số lượng</th>
                     <th style="width: 140px;">Thành tiền</th>
@@ -122,10 +94,9 @@
                     <td><input type="text" class="line-input-phieu stt" style="width: 35px;" value="1" readonly></td>
                     <td><select class="line-input-phieu select-item" style="text-align: left;"><option value=""></option><option value="ABC">Sơn Alex - màu ABC</option></select></td>
                     <td><input type="text" class="line-input-phieu ma-hang" readonly></td>
-                    <td><input type="text" class="line-input-phieu batch-no"></td>
+                    <td><input type="text" class="line-input-phieu batch-no" readonly></td>
                     <td><input type="date" class="line-input-phieu"></td>
                     <td><input type="date" class="line-input-phieu"></td>
-                    <td><input type="number" class="line-input-phieu qty-on-hand"></td>
                     <td><input type="text" class="line-input-phieu dvt" value="thùng" readonly></td>
                     <td><input type="number" class="line-input-phieu don-gia"></td>
                     <td><input type="number" class="line-input-phieu so-luong"></td>
@@ -139,7 +110,7 @@
             <div class="total-box-phieu"><span>TỔNG TIỀN:</span><span id="tong-tien">0 đ</span></div>
         </div>
         <div class="action-row-save" style="display: flex; justify-content: flex-end; padding-right: 35px;">
-            <button type="button" onclick="location.href='{% url 'nhap_kho' %}'" class="btn-save-phieu">Lưu</button>
+            <a href="{% url 'nhap_kho' %}" class="btn-save-phieu">Lưu phiếu</a>
         </div>
     </div>
 </div>
@@ -161,10 +132,6 @@
             document.getElementById('ma-phieu').value = 'NK' + Date.now().toString().slice(-6);
             document.getElementById('so-dt').value = '090506788';
             document.getElementById('dia-chi').value = '446 minh khai p Vĩnh Tuy, Q2, tpho Hồ Chí Minh';
-        } else {
-            document.getElementById('ma-phieu').value = '';
-            document.getElementById('so-dt').value = '';
-            document.getElementById('dia-chi').value = '';
         }
     });
 
@@ -172,10 +139,7 @@
         const tbody = document.getElementById('table-body');
         const firstRow = tbody.querySelector('tr');
         const newRow = firstRow.cloneNode(true);
-        newRow.querySelectorAll('input').forEach(input => {
-            if (!input.classList.contains('dvt')) input.value = '';
-            if (input.classList.contains('dvt')) input.value = 'thùng';
-        });
+        newRow.querySelectorAll('input:not(.dvt)').forEach(i => i.value = '');
         newRow.querySelector('select').selectedIndex = 0;
         tbody.appendChild(newRow);
         updateSTT();
@@ -193,23 +157,24 @@
         const slInput = row.querySelector('.so-luong');
         const ttInput = row.querySelector('.thanh-tien');
         const calculate = () => {
-            const dg = parseFloat(dgInput.value) || 0;
-            const sl = parseFloat(slInput.value) || 0;
-            ttInput.value = (dg * sl).toLocaleString('vi-VN');
+            const val = (parseFloat(dgInput.value) || 0) * (parseFloat(slInput.value) || 0);
+            ttInput.value = val.toLocaleString('vi-VN');
             updateTotalAll();
         };
         dgInput.addEventListener('input', calculate);
         slInput.addEventListener('input', calculate);
         row.querySelector('.select-item').addEventListener('change', function() {
-            if (this.value) row.querySelector('.ma-hang').value = 'MH-' + this.value;
+            if (this.value) {
+                row.querySelector('.ma-hang').value = 'MH-' + this.value;
+                row.querySelector('.batch-no').value = 'BATCH-' + Math.floor(Math.random() * 10000);
+            }
         });
     }
 
     function updateTotalAll() {
         let total = 0;
         document.querySelectorAll('.thanh-tien').forEach(input => {
-            const val = parseFloat(input.value.replace(/\./g, '')) || 0;
-            total += val;
+            total += parseFloat(input.value.replace(/\./g, '')) || 0;
         });
         document.getElementById('tong-tien').innerText = total.toLocaleString('vi-VN') + ' đ';
     }
@@ -219,21 +184,14 @@
     let rowToDelete = null;
     function deleteRow(btn) {
         const row = btn.closest('tr');
-        const tbody = document.getElementById('table-body');
-        if (tbody.rows.length > 1) {
-            row.remove();
-            updateSTT();
-            updateTotalAll();
+        if (document.querySelectorAll('#table-body tr').length > 1) {
+            row.remove(); updateSTT(); updateTotalAll();
         } else {
-            rowToDelete = row;
-            document.getElementById('confirm-delete-modal').classList.add('show');
+            rowToDelete = row; document.getElementById('confirm-delete-modal').classList.add('show');
         }
     }
 
-    function hideConfirmModal() {
-        document.getElementById('confirm-delete-modal').classList.remove('show');
-        rowToDelete = null;
-    }
+    function hideConfirmModal() { document.getElementById('confirm-delete-modal').classList.remove('show'); }
 
     document.getElementById('confirm-delete-btn').addEventListener('click', function() {
         if (rowToDelete) {

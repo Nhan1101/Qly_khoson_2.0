@@ -6,11 +6,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     .page-card {
-        background-color: transparent; /* Trong suốt */
+        background-color: transparent;
         border-radius: 0;
         padding: 20px 40px;
         position: relative;
-        box-shadow: none; /* Bỏ đổ bóng */
+        box-shadow: none;
     }
 
     .filter-section {
@@ -290,7 +290,7 @@
                 {% for i in "12345678901" %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td><a href="{% url 'xem_phieu' %}" class="ma-phieu-link">XXXXXX</a></td>
+                    <td><a href="{% url 'xem_phieu' %}" class="ma-phieu-link">NK000{{ forloop.counter }}</a></td>
                     <td class="text-left">Nhà cung cấp A</td>
                     <td>50.000.000</td>
                     <td>13/11/2022 &nbsp;&nbsp; 15:30</td>
