@@ -17,6 +17,7 @@ from suppliers.models import (
     PhieuXuat,
     SanPham,
 )
+from QLySP.forms import SanPhamForm
 
 
 def format_delivery_note_code(note_id):
@@ -434,6 +435,7 @@ class ProductCatalogView(ListView):
     
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        ctx['form'] = ctx.get('form', SanPhamForm())
         page_obj = ctx.get("page_obj")
         start_index = page_obj.start_index() if page_obj else 1
         rows = []
@@ -453,6 +455,16 @@ class ProductCatalogView(ListView):
             })
         ctx['products_json'] = json.dumps(rows)
         return ctx
+
+    def post(self, request, *args, **kwargs):
+        form = SanPhamForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Sản phẩm đã được tạo.")
+            return redirect("product-catalog")
+        self.object_list = self.get_queryset()
+        context = self.get_context_data(form=form)
+        return render(request, self.template_name, context)
 
 from Export.models import DonDatHang
 

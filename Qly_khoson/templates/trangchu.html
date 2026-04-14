@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra cứu giao hàng</title>
+    <link rel="stylesheet" href="{% static 'css/trangchu.css' %}">
+</head>
+<body>
+    <header class="header-main">
+        <div class="header-top">
+            <div class="logo">
+                <img src="https://alex.com.vn/Styles/images/logo.svg" alt="Alex Paint Logo">
+            </div>
+            <div class="slogan">Sơn Alex sơn để Thành Công</div>
+            <div class="auth-btn">
+                <a href="{% url 'home' %}">Về hệ thống</a>
+            </div>
+        </div>
+
+        <div class="header-search-bar">
+            <form method="GET" action="{% url 'tongquat:index' %}" style="display:flex;flex-grow:1;align-items:center;">
+                <div class="search-container">
+                    <input type="text" name="ma_don_hang" value="{{ query|default:'' }}" placeholder="Tra cứu thông tin đơn hàng">
+                    <button type="submit">🔍</button>
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <main class="banner">
+        {% if error_message %}
+            <div style="background:#fff;padding:15px;text-align:center;color:red;font-weight:bold;border-radius:10px;margin:20px auto;width:50%;">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        {% if don_hang %}
+            <div class="result-container" style="display:flex;justify-content:space-around;padding:20px;gap:20px;max-width:1200px;margin:0 auto;">
+                <div class="info-card" style="background:rgba(255,255,255,0.95);padding:25px;border-radius:20px;flex:1;">
+                    <h3 style="border-bottom:2px solid #1a1a9a;padding-bottom:10px;color:#1a1a9a;">Thông tin đơn hàng</h3>
+                    <p><strong>Mã phiếu:</strong> {{ don_hang.id }}</p>
+                    <p><strong>Mã đơn:</strong> {{ don_hang.ma_don|default:"Chưa gắn" }}</p>
+                    <p><strong>Người nhận:</strong> {{ don_hang.doi_tuong_nhan.ten_nguoi_nhan }}</p>
+                    <p><strong>Địa chỉ:</strong> {{ don_hang.doi_tuong_nhan.dia_chi }}</p>
+                    <p><strong>Ngày tạo:</strong> {{ don_hang.ngay_xuat|date:"d/m/Y" }}</p>
+                </div>
+
+                <div class="status-card" style="background:rgba(255,255,255,0.95);padding:25px;border-radius:20px;flex:1;">
+                    <h3 style="border-bottom:2px solid #1a1a9a;padding-bottom:10px;color:#1a1a9a;">Trạng thái vận đơn</h3>
+                    <p><strong>Dự kiến giao:</strong> {{ don_hang.du_kien_giao|date:"d/m/Y"|default:"Chưa có" }}</p>
+                    <p><strong>Tạo đơn giao hàng:</strong> {{ don_hang.da_tao_don_giao_hang|yesno:"Đã tạo,Chưa tạo" }}</p>
+                    <p><strong>Lý do xuất:</strong> {{ don_hang.ly_do_xuat|default:"Không có" }}</p>
+                    <p><strong>Tổng tiền:</strong> {{ don_hang.tong_tien }}</p>
+                </div>
+            </div>
+        {% else %}
+            <img src="https://alex.com.vn/FileUpload/Images/bannerweb_1.jpg" alt="Poster Alex Paint">
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -48,9 +48,58 @@
   </div>
 
   <div class="product-actions">
-    <button class="product-create-btn" type="button">
+    <button class="product-create-btn" type="button" onclick="document.getElementById('productModal').style.display='flex'; document.getElementById('productModal').setAttribute('aria-hidden', 'false');">
       <i class="fa-solid fa-plus"></i> Tạo sản phẩm
     </button>
+  </div>
+
+  <div id="productModal" class="product-modal" aria-hidden="true">
+    <div class="product-modal-content">
+      <div class="product-modal-header">
+        <div>
+          <h3 id="productModalTitle">Tạo sản phẩm mới</h3>
+          <p class="product-modal-subtitle">Điền thông tin sản phẩm và lưu để thêm mới.</p>
+        </div>
+        <button type="button" class="product-modal-close" aria-label="Đóng" onclick="document.getElementById('productModal').style.display='none'; document.getElementById('productModal').setAttribute('aria-hidden', 'true');">×</button>
+      </div>
+      <form id="productCreateForm" method="post" action="" class="product-form">
+        {% csrf_token %}
+        <div class="product-form-grid">
+          <div class="product-field product-field-lg">
+            <label class="product-field-label" for="id_ma_son">Mã hàng hóa</label>
+            {{ form.ma_son }}
+          </div>
+          <div class="product-field product-field-lg">
+            <label class="product-field-label" for="id_ten_son">Tên hàng hóa</label>
+            {{ form.ten_son }}
+          </div>
+          <div class="product-field product-field-lg">
+            <label class="product-field-label" for="id_loai_son">Loại sơn</label>
+            {{ form.loai_son }}
+          </div>
+          <div class="product-field product-field-lg">
+            <label class="product-field-label" for="id_don_vi_tinh">Đơn vị tính</label>
+            {{ form.don_vi_tinh }}
+          </div>
+          <div class="product-field product-field-lg">
+            <label class="product-field-label" for="id_gia_nhap">Giá vốn</label>
+            {{ form.gia_nhap }}
+          </div>
+          <div class="product-field product-field-lg">
+            <label class="product-field-label" for="id_gia_ban">Giá bán</label>
+            {{ form.gia_ban }}
+          </div>
+          <div class="product-field product-field-lg">
+            <label class="product-field-label" for="id_muc_toi_thieu">Mức tối thiểu</label>
+            {{ form.muc_toi_thieu }}
+          </div>
+        </div>
+        <div class="product-modal-footer">
+          <button type="button" class="product-modal-secondary" onclick="document.getElementById('productModal').style.display='none'; document.getElementById('productModal').setAttribute('aria-hidden', 'true');">Hủy</button>
+          <button type="submit" class="product-create-submit-btn">Lưu sản phẩm</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <div class="product-table-card">
@@ -113,6 +162,24 @@
   {% if products_json %}
   var productCatalogRows = {{ products_json|safe }};
   {% endif %}
+
+  if (typeof openProductModal === 'undefined') {
+    function openProductModal() {
+      var productModal = document.getElementById('productModal');
+      if (!productModal) return;
+      productModal.style.display = 'flex';
+      productModal.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  if (typeof closeProductModal === 'undefined') {
+    function closeProductModal() {
+      var productModal = document.getElementById('productModal');
+      if (!productModal) return;
+      productModal.style.display = 'none';
+      productModal.setAttribute('aria-hidden', 'true');
+    }
+  }
 </script>
 <script src="{% static 'js/pages/product_catalog.js' %}" defer></script>
 {% endblock %}

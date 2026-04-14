@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Chi Tiết Đơn Đặt Hàng - ALEX Paint System{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .phieu-nhap-container { box-sizing: border-box; font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; width: 100%; overflow-x: auto; }
+    .phieu-modal { background: #ffffff; width: 100%; max-width: 1250px; border: 1px solid #777; position: relative; padding-bottom: 30px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); }
+    .phieu-header { text-align: center; padding: 22px 0 18px 0; position: relative; }
+    .phieu-header h2 { font-size: 18px; font-weight: 700; color: #000; margin: 0; }
+
+    .btn-close-phieu { position: absolute; top: 15px; right: 20px; font-size: 24px; font-weight: bold; color: #000; cursor: pointer; text-decoration: none; display: block; z-index: 999; }
+    .btn-close-phieu:hover { color: #eb0000; }
+
+    .info-box { background-color: #e8e8e8; border: 1px solid #777; margin: 0 20px 15px 20px; padding: 16px 20px 24px 20px; }
+    .info-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; margin-top: 0; }
+    .info-grid { display: flex; justify-content: space-between; gap: 40px; }
+    .info-col { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .form-group-phieu { display: flex; justify-content: space-between; align-items: flex-start; }
+    .form-group-phieu label { font-size: 13px; margin-top: 5px; color: #000; white-space: nowrap; }
+    .input-box-phieu { width: 220px; height: 28px; border: 1px solid #5a5eb9; outline: none; font-size: 14px; padding: 0 6px; color: #000; background-color: #cecece; pointer-events: none; }
+    textarea.input-box-phieu { height: 55px; resize: none; padding: 6px; }
+
+    .phieu-data-table { width: 100%; border-collapse: collapse; margin-bottom: 45px; }
+    .phieu-data-table th { background-color: #eeeeee; font-size: 13px; font-weight: 700; padding: 14px 5px; text-align: center; border: 1px solid #ddd; color: #000; }
+    .phieu-data-table td { padding: 10px 5px; text-align: center; border: 1px solid #ddd; }
+    .line-input-phieu { border: none; border-bottom: 1px solid #000; width: 100%; background: transparent; outline: none; height: 26px; text-align: center; font-size: 14px; color: #000; pointer-events: none; }
+</style>
+
+<div class="phieu-nhap-container">
+    <div class="phieu-modal">
+        <a href="{% url 'ds_don_dat_hang_ncc' %}" class="btn-close-phieu">X</a>
+        <div class="phieu-header"><h2>CHI TIẾT ĐƠN ĐẶT HÀNG</h2></div>
+
+        <div class="info-box">
+            <h3>Thông tin chung</h3>
+            <div class="info-grid">
+                <div class="info-col">
+                    <div class="form-group-phieu"><label>Nhà cung cấp</label><input type="text" class="input-box-phieu" value="Nhà cung cấp A"></div>
+                    <div class="form-group-phieu"><label>Số điện thoại</label><input type="text" class="input-box-phieu" value="090506788"></div>
+                </div>
+                <div class="info-col">
+                    <div class="form-group-phieu"><label>Mã đơn</label><input type="text" class="input-box-phieu" value="DH000001"></div>
+                    <div class="form-group-phieu"><label>Địa chỉ</label><textarea class="input-box-phieu">446 minh khai p Vĩnh Tuy, Q2, tpho Hồ Chí Minh</textarea></div>
+                </div>
+            </div>
+        </div>
+
+        <table class="phieu-data-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">STT</th>
+                    <th>Tên hàng hóa</th>
+                    <th style="width: 150px;">Mã hàng</th>
+                    <th style="width: 120px;">Đơn vị tính</th>
+                    <th style="width: 120px;">Số lượng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" class="line-input-phieu" value="1"></td>
+                    <td><input type="text" class="line-input-phieu" value="Sơn Alex - màu ABC"></td>
+                    <td><input type="text" class="line-input-phieu" value="MH-ABC"></td>
+                    <td><input type="text" class="line-input-phieu" value="thùng"></td>
+                    <td><input type="text" class="line-input-phieu" value="10"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

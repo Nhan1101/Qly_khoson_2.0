@@ -259,6 +259,100 @@
   line-height: 1;
 }
 
+.product-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.product-modal[aria-hidden="false"] {
+  display: flex;
+}
+
+.product-modal-content {
+  width: min(720px, 100%);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  padding: 28px;
+  position: relative;
+}
+
+.product-modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+
+.product-modal-header h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #1511c6;
+}
+
+.product-modal-subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: #606c80;
+}
+
+.product-modal-close {
+  border: none;
+  background: transparent;
+  color: #444;
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.product-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.product-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.product-modal-secondary {
+  background: #f4f5fb;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.product-create-submit-btn {
+  min-width: 140px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: var(--product-blue);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.product-field input,
+.product-field select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
 @media (max-width: 1080px) {
   .product-table {
     min-width: 1120px;

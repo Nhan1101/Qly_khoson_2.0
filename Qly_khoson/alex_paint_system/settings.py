@@ -38,8 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'suppliers.apps.SuppliersConfig',
+    'DangNhap.apps.DangNhapConfig',
     'QuanLyTaiKhoa.apps.QuanLyTaiKhoaConfig',
     'QuanLyKiemKe.apps.QuanLyKiemKeConfig',
+    'nhapkho.apps.NhapkhoConfig',
+    'Tongquat',
+    'QLySP',
+    'BaoCao',
     'Export',
 ]
 
@@ -108,9 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'vi'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 USE_I18N = True
 
@@ -127,4 +132,8 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+LOGIN_URL = 'dang-nhap:login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'dang-nhap:login'
 

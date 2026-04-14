@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Quản lý Tài khoản{% endblock %}
+{% block menu_taikhoan_active %}is-active{% endblock %}
+
+{% block extra_css %}
+  <script src="{% static 'js/taikhoan-tailwind-config.js' %}"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="{% static 'css/taikhoan.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <div class="account-shell flex flex-col gap-6 px-2 py-6 md:px-8">
+    {% if messages %}
+      <div class="space-y-2">
+        {% for message in messages %}
+          <div class="account-toast account-toast--{{ message.tags|default:'info' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="get" class="rounded border border-gray-300 bg-white p-4 shadow-sm">
+      <div class="flex flex-wrap items-center gap-3">
+        <input
+          type="text"
+          name="full_name"
+          value="{{ filters.full_name|default_if_none:'' }}"
+          placeholder="Họ tên"
+          class="min-w-[140px] flex-1 rounded border border-gray-300 bg-gray-100 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+        />
+        <input
+          type="text"
+          name="username"
+          value="{{ filters.username|default_if_none:'' }}"
+          placeholder="Tên đăng nhập"
+          class="min-w-[140px] flex-1 rounded border border-gray-300 bg-gray-100 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+        />
+        <select
+          name="role"
+          class="min-w-[140px] flex-1 appearance-none rounded border border-gray-300 bg-gray-100 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+        >
+          <option value="">Vai trò</option>
+          <option value="Admin" {% if filters.role == "Admin" %}selected{% endif %}>Chủ cửa hàng</option>
+          <option value="NhanVien" {% if filters.role == "NhanVien" %}selected{% endif %}>Nhân viên kho</option>
+          <option value="GiaoHang" {% if filters.role == "GiaoHang" %}selected{% endif %}>Giao hàng</option>
+        </select>
+        <button
+          type="submit"
+          class="flex items-center whitespace-nowrap rounded bg-[#818CF8] px-6 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-indigo-700"
+        >
+          Tìm kiếm
+          <span class="material-icons-outlined ml-2 text-sm">search</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="account-card rounded border border-gray-300 bg-white p-6 shadow-sm">
+      <div class="mb-6 flex justify-between">
+        <h2 class="text-lg font-semibold">Danh sách tài khoản</h2>
+        <button
+          id="openModal"
+          type="button"
+          class="flex items-center rounded-lg bg-primary px-8 py-2 font-bold text-white shadow-lg transition-all hover:opacity-90"
+        >
+          <span class="material-icons-outlined mr-2">add</span>
+          Tài khoản
+        </button>
+      </div>
+
+      <div class="overflow-hidden rounded border border-gray-300">
+        <table class="account-table w-full border-collapse text-center">
+          <thead class="bg-primary text-sm font-bold uppercase text-white">
+            <tr>
+              <th class="w-16 py-3">STT</th>
+              <th class="py-3">Họ tên</th>
+              <th class="py-3">Tên đăng nhập</th>
+              <th class="py-3">Mật khẩu</th>
+              <th class="py-3">Vai trò</th>
+              <th class="w-32 py-3">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y text-sm text-gray-700">
+            {% if accounts %}
+              {% for account in accounts %}
+                <tr
+                  class="hover:bg-gray-50"
+                  data-account-id="{{ account.pk }}"
+                  data-full-name="{{ account.get_full_name|default:account.username }}"
+                  data-username="{{ account.username }}"
+                  data-role="{{ account.vai_tro }}"
+                >
+                  <td class="account-stt py-4">{{ page_obj.start_index|add:forloop.counter0 }}</td>
+                  <td class="py-4">{{ account.get_full_name|default:account.username }}</td>
+                  <td class="py-4">{{ account.username }}</td>
+                  <td class="py-4">********</td>
+                  <td class="py-4">{{ account.get_vai_tro_display }}</td>
+                  <td class="py-4">
+                    <div class="flex justify-center space-x-6">
+                      <button
+                        type="button"
+                        class="editBtn focus:outline-none"
+                        aria-label="Chỉnh sửa {{ account.username }}"
+                      >
+                        <span class="material-icons-outlined icon-action action-icon action-icon--edit">
+                          edit
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        class="focus:outline-none"
+                        aria-label="Xóa {{ account.username }}"
+                        data-delete-url="{% url 'taikhoan_delete' account.pk %}"
+                        data-next-url="{{ request.get_full_path }}"
+                        onclick="openDeleteModal(this.dataset.deleteUrl, this.dataset.nextUrl)"
+                      >
+                        <span class="material-icons-outlined icon-action action-icon action-icon--delete">
+                          delete
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td class="py-6" colspan="6">Chưa có tài khoản nào phù hợp.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="account-pagination mt-8 flex items-center justify-center space-x-2">
+        {% if page_obj.has_previous %}
+          <a
+            class="flex h-8 w-8 items-center justify-center rounded-full border hover:bg-gray-100"
+            href="?page={{ page_obj.previous_page_number }}{{ query_suffix }}"
+            aria-label="Trang trước"
+          >
+            <span class="material-icons-outlined text-sm font-bold">chevron_left</span>
+          </a>
+        {% else %}
+          <span class="flex h-8 w-8 items-center justify-center rounded-full border text-gray-400" aria-hidden="true">
+            <span class="material-icons-outlined text-sm font-bold">chevron_left</span>
+          </span>
+        {% endif %}
+
+        {% for page_num in page_obj.paginator.page_range|slice:":3" %}
+          {% if page_num == page_obj.number %}
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded bg-primary text-sm font-bold text-white shadow-sm" aria-current="page">
+              {{ page_num }}
+            </span>
+          {% else %}
+            <a class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium hover:bg-gray-100" href="?page={{ page_num }}{{ query_suffix }}">
+              {{ page_num }}
+            </a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.paginator.num_pages > 3 %}
+          <span class="px-2 font-bold text-gray-500">...</span>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+          <a
+            class="flex h-8 w-8 items-center justify-center rounded-full border hover:bg-gray-100"
+            href="?page={{ page_obj.next_page_number }}{{ query_suffix }}"
+            aria-label="Trang sau"
+          >
+            <span class="material-icons-outlined text-sm font-bold">chevron_right</span>
+          </a>
+        {% else %}
+          <span class="flex h-8 w-8 items-center justify-center rounded-full border text-gray-400" aria-hidden="true">
+            <span class="material-icons-outlined text-sm font-bold">chevron_right</span>
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div id="createAccountModal" class="modal-overlay hidden z-50">
+    <div class="modal-card">
+      <form
+        id="accountModalForm"
+        method="post"
+        action="{% url 'taikhoan_create' %}"
+        data-create-url="{% url 'taikhoan_create' %}"
+        data-edit-url-template="{{ edit_url_template }}"
+        class="modal-form"
+      >
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+        <div class="modal-header">
+          <h2 id="modalTitle" class="text-2xl font-bold">Tạo tài khoản</h2>
+          <button type="button" id="closeModal" class="material-icons-outlined modal-close" aria-label="Đóng">
+            close
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="modal-field">
+            <label for="modalFullName">Họ tên</label>
+            <input id="modalFullName" name="full_name" type="text" class="modal-input" />
+          </div>
+
+          <div class="modal-field">
+            <label for="modalRole">Vai trò</label>
+            <select id="modalRole" name="vai_tro" class="modal-input">
+              <option value="Admin">Chủ cửa hàng</option>
+              <option value="NhanVien">Nhân viên kho</option>
+              <option value="GiaoHang">Giao hàng</option>
+            </select>
+          </div>
+
+          <div class="modal-field">
+            <label for="modalUsername">Tên đăng nhập</label>
+            <input id="modalUsername" name="username" type="text" class="modal-input" />
+          </div>
+
+          <div class="modal-field">
+            <label for="modalPassword">Mật khẩu</label>
+            <input id="modalPassword" name="password" type="password" class="modal-input" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="modal-submit">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="deleteConfirmModal" class="modal-overlay hidden">
+    <div class="delete-modal-card">
+      <div class="delete-modal-header">
+        <button
+          type="button"
+          class="delete-modal-close"
+          aria-label="Đóng"
+          onclick="closeDeleteModal()"
+        >
+          ×
+        </button>
+      </div>
+      <div class="delete-modal-body">
+        <p class="delete-modal-title">Bạn chắc chắn muốn xóa này?</p>
+        <form id="deleteConfirmForm" method="post">
+          {% csrf_token %}
+          <input id="deleteConfirmNext" type="hidden" name="next" value="{{ request.get_full_path }}" />
+          <div class="delete-modal-actions">
+            <button type="submit" class="delete-confirm-btn">Đồng ý</button>
+            <button type="button" class="delete-cancel-btn" onclick="closeDeleteModal()">Hủy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/taikhoan.js' %}" defer></script>
+  <script>
+    function openDeleteModal(deleteUrl, nextUrl) {
+      var modal = document.getElementById("deleteConfirmModal");
+      var form = document.getElementById("deleteConfirmForm");
+      var nextInput = document.getElementById("deleteConfirmNext");
+      if (!modal || !form) {
+        return;
+      }
+      form.action = deleteUrl;
+      if (nextInput && nextUrl) {
+        nextInput.value = nextUrl;
+      }
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      modal.style.display = "flex";
+    }
+
+    function closeDeleteModal() {
+      var modal = document.getElementById("deleteConfirmModal");
+      if (!modal) {
+        return;
+      }
+      modal.classList.remove("flex");
+      modal.classList.add("hidden");
+      modal.style.display = "none";
+    }
+
+    document.addEventListener("click", function (event) {
+      var modal = document.getElementById("deleteConfirmModal");
+      if (modal && event.target === modal) {
+        closeDeleteModal();
+      }
+    });
+  </script>
+{% endblock %}

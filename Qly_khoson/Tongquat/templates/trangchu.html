@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sơn Alex - Trang chủ</title>
+    <link rel="stylesheet" href="{% static 'css/trangchu.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header-main">
+        <div class="header-top">
+            <div class="logo">
+                <img src="https://alex.com.vn/Styles/images/logo.svg" alt="Alex Paint Logo">
+            </div>
+            <div class="slogan">Sơn Alex sơn để Thành Công</div>
+            <div class="auth-btn">
+                <a href="#">Đăng nhập</a>
+            </div>
+        </div>
+
+        <div class="header-search-bar">
+            <form method="GET" action="{% url 'tongquat:index' %}" style="display: flex; flex-grow: 1; align-items: center;">
+                <div class="search-container">
+                    <input type="text" name="ma_don_hang" value="{{ query|default:'' }}" placeholder="Tra cứu thông tin đơn hàng">
+                    <button type="submit">🔍</button>
+                </div>
+            </form>
+            <div class="hotline">
+                <span>📞 HOTLINE: 1900 98 89 67 / 0961 662 268</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="banner">
+        {% if error_message %}
+            <div style="background: white; padding: 15px; text-align: center; color: red; font-weight: bold; border-radius: 10px; margin: 20px auto; width: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                ⚠️ {{ error_message }}
+            </div>
+        {% endif %}
+
+        {% if don_hang %}
+            <div class="result-container" style="display: flex; justify-content: space-around; padding: 20px; gap: 20px; max-width: 1200px; margin: 0 auto;">
+                <div class="info-card" style="background: rgba(255,255,255,0.95); padding: 25px; border-radius: 20px; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <h3 style="border-bottom: 2px solid #1a1a9a; padding-bottom: 10px; color: #1a1a9a;">Thông tin đơn hàng</h3>
+                    <p><strong>Mã phiếu:</strong> {{ don_hang.id }}</p>
+                    <p><strong>Người nhận:</strong> {{ don_hang.doi_tuong_nhan.ten_nguoi_nhan }}</p>
+                    <p><strong>Địa chỉ:</strong> {{ don_hang.doi_tuong_nhan.dia_chi }}</p>
+                    <p><strong>Ngày tạo:</strong> {{ don_hang.ngay_xuat|date:"d/m/Y" }}</p>
+                </div>
+
+                <div class="status-card" style="background: rgba(255,255,255,0.95); padding: 25px; border-radius: 20px; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <h3 style="border-bottom: 2px solid #1a1a9a; padding-bottom: 10px; color: #1a1a9a;">Trạng thái vận đơn</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        {% for status in don_hang.lich_su.all %}
+                        <li style="margin-bottom: 15px; display: flex; justify-content: space-between; border-left: 3px solid #1a1a9a; padding-left: 10px;">
+                            <span style="color: {% if forloop.first %}red{% else %}#333{% endif %}; font-weight: bold;">
+                                ● {{ status.get_trang_thai_display }}
+                            </span>
+                            <span style="font-size: 0.9em;">{{ status.thoi_gian|date:"H:i - d/m/Y" }}</span>
+                        </li>
+                        {% empty %}
+                        <li>Chưa có lịch sử cập nhật.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% else %}
+            <img src="https://alex.com.vn/FileUpload/Images/bannerweb_1.jpg" alt="Poster Alex Paint">
+        {% endif %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>🏠 Địa chỉ: Chợ An Lỗ, phường Phong Thái, tp Huế</p>
+            <p>Website: <a href="https://alex.com.vn">https://alex.com.vn</a></p>
+            <p>Email: lienhe@alex.com.vn</p>
+            <p>© 2026 Bản quyền alex.com.vn</p>
+        </div>
+    </footer>
+
+</body>
+</html>

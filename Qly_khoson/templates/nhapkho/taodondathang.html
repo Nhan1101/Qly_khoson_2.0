@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}Tạo Đơn Đặt Hàng - ALEX Paint System{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .phieu-nhap-container { box-sizing: border-box; font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; width: 100%; overflow-x: auto; }
+    .phieu-modal { background: #ffffff; width: 100%; max-width: 1250px; border: 1px solid #777; position: relative; padding-bottom: 30px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); }
+    .phieu-header { text-align: center; padding: 22px 0 18px 0; position: relative; }
+    .phieu-header h2 { font-size: 18px; font-weight: 700; color: #000; margin: 0; }
+    .btn-close-phieu { position: absolute; top: 15px; right: 20px; font-size: 24px; font-weight: bold; color: #000; cursor: pointer; text-decoration: none; display: block; z-index: 999; }
+    .btn-close-phieu:hover { color: #eb0000; }
+
+    .info-box { background-color: #e8e8e8; border: 1px solid #777; margin: 0 20px 15px 20px; padding: 16px 20px 24px 20px; }
+    .info-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; margin-top: 0; }
+    .info-grid { display: flex; justify-content: space-between; gap: 40px; }
+    .info-col { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .form-group-phieu { display: flex; justify-content: space-between; align-items: flex-start; }
+    .form-group-phieu label { font-size: 13px; margin-top: 5px; color: #000; white-space: nowrap; }
+    .input-box-phieu { width: 220px; height: 28px; border: 1px solid #5a5eb9; outline: none; font-size: 14px; padding: 0 6px; color: #000; }
+    textarea.input-box-phieu { height: 55px; resize: none; padding: 6px; }
+    .disabled-box-phieu { background-color: #cecece; pointer-events: none; }
+
+    .add-btn-wrapper { display: flex; justify-content: flex-end; padding: 0 20px 12px 20px; }
+    .btn-add-item { background-color: #4caf50; color: white; border: none; border-radius: 6px; padding: 8px 22px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+
+    .phieu-data-table { width: 100%; border-collapse: collapse; margin-bottom: 45px; }
+    .phieu-data-table th { background-color: #eeeeee; font-size: 13px; font-weight: 700; padding: 14px 5px; text-align: center; border: 1px solid #ddd; color: #000; }
+    .phieu-data-table td { padding: 10px 5px; text-align: center; border: 1px solid #ddd; }
+    .line-input-phieu { border: none; border-bottom: 1px solid #000; width: 100%; background: transparent; outline: none; height: 26px; text-align: center; font-size: 14px; color: #000; }
+
+    .action-row-save { display: flex; justify-content: flex-end; padding: 0 35px; }
+    .btn-save-phieu { background-color: #0b00a8; color: white !important; border: none; border-radius: 8px; padding: 12px 50px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
+
+    .confirm-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; visibility: hidden; opacity: 0; transition: opacity 0.3s; }
+    .confirm-modal-overlay.show { visibility: visible; opacity: 1; }
+    .confirm-modal-content { background: #ffffff; border-radius: 8px; padding: 10px 20px 25px 20px; width: 380px; position: relative; }
+    .confirm-header { display: flex; justify-content: flex-end; }
+    .close-btn { background: none; border: none; font-size: 22px; font-weight: bold; cursor: pointer; color: #555; }
+    .confirm-modal-actions { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+    .confirm-modal-actions button { padding: 9px 30px; border: none; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; color: #ffffff; }
+
+    /* Toast Notification */
+    .toast-container { position: fixed; top: 20px; right: 20px; z-index: 10001; }
+    .toast { background: #333; color: #fff; padding: 12px 24px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+</style>
+
+<div class="phieu-nhap-container">
+    <div class="phieu-modal">
+        <a href="{% url 'ds_don_dat_hang_ncc' %}" class="btn-close-phieu">X</a>
+        <div class="phieu-header"><h2>TẠO ĐƠN ĐẶT HÀNG</h2></div>
+
+        <div class="info-box">
+            <h3>Thông tin chung</h3>
+            <div class="info-grid">
+                <div class="info-col">
+                    <div class="form-group-phieu">
+                        <label>Nhà cung cấp</label>
+                        <select id="select-ncc" class="input-box-phieu">
+                            <option value="">Chọn nhà cung cấp</option>
+                            {% for ncc in nhacungcaps %}
+                            <option value="{{ ncc.id }}" data-phone="{{ ncc.so_dien_thoai }}" data-address="{{ ncc.dia_chi }}">{{ ncc.ten_ncc }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group-phieu"><label>Số điện thoại</label><input type="text" id="so-dt" class="input-box-phieu disabled-box-phieu" readonly></div>
+                </div>
+                <div class="info-col">
+                    <div class="form-group-phieu"><label>Mã phiếu</label><input type="text" id="ma-phieu" class="input-box-phieu disabled-box-phieu" readonly></div>
+                    <div class="form-group-phieu"><label>Địa chỉ</label><textarea id="dia-chi" class="input-box-phieu disabled-box-phieu" readonly></textarea></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-btn-wrapper">
+            <button class="btn-add-item" id="btn-add-row"><i class="fa-solid fa-circle-plus"></i> Thêm</button>
+        </div>
+
+        <table class="phieu-data-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">STT</th>
+                    <th>Tên hàng hóa</th>
+                    <th style="width: 150px;">Mã hàng</th>
+                    <th style="width: 120px;">Đơn vị tính</th>
+                    <th style="width: 120px;">Số lượng</th>
+                    <th style="width: 50px;">Xóa</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tr>
+                    <td><input type="text" class="line-input-phieu stt" style="width: 35px;" value="1" readonly></td>
+                    <td><select class="line-input-phieu select-item" style="text-align: left;"><option value=""></option><option value="ABC">Sơn Alex - màu ABC</option></select></td>
+                    <td><input type="text" class="line-input-phieu ma-hang" readonly></td>
+                    <td><input type="text" class="line-input-phieu dvt" value="thùng" readonly></td>
+                    <td><input type="number" class="line-input-phieu so-luong"></td>
+                    <td><button class="btn-delete-item" onclick="deleteRow(this)"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="action-row-save" style="display: flex; justify-content: flex-end; padding-right: 35px; margin-top: 20px;">
+            <button type="button" id="btn-save-order" class="btn-save-phieu">Lưu đơn hàng</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<div class="confirm-modal-overlay" id="confirm-delete-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-header"><button class="close-btn" onclick="hideConfirmModal()">&times;</button></div>
+        <p style="text-align: center;">Bạn có chắc chắn muốn xóa không?</p>
+        <div class="confirm-modal-actions">
+            <button style="background:#dc3545" onclick="hideConfirmModal()">Hủy</button>
+            <button style="background:#28a745" id="confirm-delete-btn">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showToast(message, type = 'error') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.display = 'block';
+        toast.style.backgroundColor = type === 'success' ? '#28a745' : '#dc3545';
+        toast.innerText = message;
+        container.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 3000);
+    }
+
+    document.getElementById('select-ncc').addEventListener('change', function() {
+        const selected = this.options[this.selectedIndex];
+        if (this.value) {
+            document.getElementById('ma-phieu').value = 'DH' + Date.now().toString().slice(-6);
+            document.getElementById('so-dt').value = selected.getAttribute('data-phone') || '';
+            document.getElementById('dia-chi').value = selected.getAttribute('data-address') || '';
+        } else {
+            document.getElementById('ma-phieu').value = '';
+            document.getElementById('so-dt').value = '';
+            document.getElementById('dia-chi').value = '';
+        }
+    });
+
+    document.getElementById('btn-add-row').addEventListener('click', function() {
+        const tbody = document.getElementById('table-body');
+        const firstRow = tbody.querySelector('tr');
+        const newRow = firstRow.cloneNode(true);
+        newRow.querySelectorAll('input:not(.dvt)').forEach(i => i.value = '');
+        newRow.querySelector('select').selectedIndex = 0;
+        tbody.appendChild(newRow);
+        updateSTT();
+        attachLogic(newRow);
+    });
+
+    function updateSTT() {
+        document.querySelectorAll('#table-body tr').forEach((row, index) => {
+            row.querySelector('.stt').value = index + 1;
+        });
+    }
+
+    function attachLogic(row) {
+        row.querySelector('.select-item').addEventListener('change', function() {
+            if (this.value) row.querySelector('.ma-hang').value = 'MH-' + this.value;
+            else row.querySelector('.ma-hang').value = '';
+        });
+    }
+
+    attachLogic(document.querySelector('#table-body tr'));
+
+    document.getElementById('btn-save-order').addEventListener('click', function() {
+        const ncc = document.getElementById('select-ncc').value;
+        const rows = document.querySelectorAll('#table-body tr');
+        let hasItem = false;
+        rows.forEach(row => {
+            if (row.querySelector('.select-item').value && row.querySelector('.so-luong').value) {
+                hasItem = true;
+            }
+        });
+
+        if (!ncc || !hasItem) {
+            showToast('Chưa tạo được đơn hàng vì không có thông tin!');
+        } else {
+            window.location.href = "{% url 'ds_don_dat_hang_ncc' %}";
+        }
+    });
+
+    let rowToDelete = null;
+    function deleteRow(btn) {
+        const row = btn.closest('tr');
+        if (document.querySelectorAll('#table-body tr').length > 1) {
+            row.remove(); updateSTT();
+        } else {
+            rowToDelete = row; document.getElementById('confirm-delete-modal').classList.add('show');
+        }
+    }
+
+    function hideConfirmModal() { document.getElementById('confirm-delete-modal').classList.remove('show'); }
+
+    document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+        if (rowToDelete) {
+            rowToDelete.querySelectorAll('input:not(.dvt)').forEach(i => i.value = '');
+            rowToDelete.querySelector('select').selectedIndex = 0;
+        }
+        hideConfirmModal();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Cảnh báo hạn sử dụng{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+    <div style="background:#1a1a9a;color:#fff;padding:15px 20px;font-weight:700;">CẢNH BÁO HẠN SỬ DỤNG</div>
+    <div style="background:#fff;padding:20px;">
+        <div style="text-align:right;margin-bottom:15px;">
+            Ngày hiện tại: <strong>{{ ngay_hien_tai|date:"d/m/Y" }}</strong>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#1a1a9a;color:#fff;">
+                    <th style="padding:12px;">STT</th>
+                    <th style="padding:12px;">Tên sản phẩm</th>
+                    <th style="padding:12px;">Mã lô</th>
+                    <th style="padding:12px;">Hạn sử dụng</th>
+                    <th style="padding:12px;">Ngày còn lại</th>
+                    <th style="padding:12px;">Tình trạng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sp in lo_sap_het_han %}
+                <tr style="border-bottom:1px solid #eee;text-align:center;">
+                    <td style="padding:12px;">{{ forloop.counter }}</td>
+                    <td style="padding:12px;">{{ sp.san_pham.ten_son }}</td>
+                    <td style="padding:12px;">{{ sp.batch_no }}</td>
+                    <td style="padding:12px;">{{ sp.exp_date|date:"d/m/Y" }}</td>
+                    <td style="padding:12px;"><strong>{{ sp.so_ngay_con_lai }} ngày</strong></td>
+                    <td style="padding:12px;">
+                        {% if sp.so_ngay_con_lai <= 5 %}
+                            <span style="background:#d9534f;color:#fff;padding:5px 12px;border-radius:4px;">Nguy cấp</span>
+                        {% else %}
+                            <span style="background:#f0ad4e;color:#fff;padding:5px 12px;border-radius:4px;">Sắp hết</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="padding:24px;text-align:center;">Không có sản phẩm nào sắp hết hạn trong 15 ngày tới.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .header-box { background: #1a1a9a; color: white; padding: 15px; font-weight: bold; border-radius: 4px 4px 0 0; }
+    .table-container { background: white; padding: 20px; border-radius: 0 0 4px 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .status-badge { padding: 5px 15px; border-radius: 5px; color: white; font-weight: bold; font-size: 13px; }
+    .bg-warning { background-color: #f0ad4e; } /* Còn hạn nhưng sắp hết */
+    .bg-danger { background-color: #d9534f; }  /* Sắp hết hạn (dưới 5 ngày) */
+</style>
+
+<div style="padding: 20px;">
+    <div class="header-box">CẢNH BÁO HẠN SỬ DỤNG</div>
+    
+    <div class="table-container">
+        <div style="text-align: right; margin-bottom: 15px;">
+            Ngày hiện tại: <strong>{{ ngay_hien_tai|date:"d/m/Y" }}</strong>
+        </div>
+
+        <table class="data-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #1a1a9a; color: white;">
+                    <th>STT</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Mã lô</th>
+                    <th>Hạn sử dụng</th>
+                    <th>Ngày còn lại</th>
+                    <th>Tình trạng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sp in san_phams %}
+                <tr style="border-bottom: 1px solid #eee; text-align: center;">
+                    <td style="padding: 12px;">{{ forloop.counter }}</td>
+                    <td>{{ sp.ten_son }}</td>
+                    <td><span style="color: #666;">{{ sp.ma_lo }}</span></td>
+                    <td>{{ sp.han_su_dung|date:"d/m/Y" }}</td>
+                    <td><strong>{{ sp.so_ngay_con_lai }} ngày</strong></td>
+                    <td>
+                        {% if sp.so_ngay_con_lai <= 5 %}
+                            <span class="status-badge bg-danger">Nguy cấp</span>
+                        {% else %}
+                            <span class="status-badge bg-warning">Sắp hết</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="padding: 30px; color: #999;">Không có sản phẩm nào sắp hết hạn (trong vòng 15 ngày).</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

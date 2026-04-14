@@ -4,6 +4,11 @@ if (typeof productCatalogRows === 'undefined') {
 
 document.addEventListener("DOMContentLoaded", () => {
   const tableBody = document.getElementById("product-catalog-table-body");
+  const openCreateBtn = document.querySelector(".product-actions .product-create-btn");
+  const productModal = document.getElementById("productModal");
+  const closeProductBtn = document.querySelector(".product-modal-close");
+  const productForm = document.getElementById("productCreateForm");
+
   if (!tableBody) {
     return;
   }
@@ -30,4 +35,55 @@ document.addEventListener("DOMContentLoaded", () => {
       </td>
     </tr>
   `).join("");
+
+  if (openCreateBtn) {
+    openCreateBtn.addEventListener("click", () => {
+      openProductModal();
+    });
+  }
+
+  if (closeProductBtn) {
+    closeProductBtn.addEventListener("click", () => {
+      closeProductModal();
+    });
+  }
+
+  if (productModal) {
+    productModal.addEventListener("click", (event) => {
+      if (event.target === productModal) {
+        closeProductModal();
+      }
+    });
+  }
+
+  if (productForm) {
+    productForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      productForm.submit();
+    });
+  }
 });
+
+function openProductModal() {
+  const productModal = document.getElementById("productModal");
+  if (!productModal) {
+    return;
+  }
+  const productModalTitle = document.getElementById("productModalTitle");
+  const productForm = document.getElementById("productCreateForm");
+
+  productModalTitle.textContent = "Tạo sản phẩm mới";
+  productForm.reset();
+  productForm.action = window.location.pathname;
+  productModal.style.display = "flex";
+  productModal.setAttribute("aria-hidden", "false");
+}
+
+function closeProductModal() {
+  const productModal = document.getElementById("productModal");
+  if (!productModal) {
+    return;
+  }
+  productModal.style.display = "none";
+  productModal.setAttribute("aria-hidden", "true");
+}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Danh mục sản phẩm{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+    <div style="background:#fff;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.08);padding:24px;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;">
+            <div>
+                <div style="font-size:18px;font-weight:700;color:#1a1a9a;margin-bottom:8px;">Danh mục sản phẩm</div>
+                <div style="color:#666;font-size:14px;">Tìm kiếm và quản lý sản phẩm trong kho.</div>
+            </div>
+            <button type="button" style="background:#1a1a9a;color:#fff;border:none;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer;">+ Tạo sản phẩm</button>
+        </div>
+
+        <form method="get" style="display:grid;grid-template-columns:1fr 1fr auto;gap:16px;padding:16px 0;margin-bottom:16px;">
+            <div>
+                <label style="display:block;font-size:13px;color:#333;margin-bottom:6px;">Mã hàng hóa</label>
+                <input type="text" name="ma_hang" value="{{ ma_hang }}" style="width:100%;padding:12px;border:1px solid #d9d9d9;border-radius:8px;background:#f8f8ff;">
+            </div>
+            <div>
+                <label style="display:block;font-size:13px;color:#333;margin-bottom:6px;">Tên hàng hóa</label>
+                <input type="text" name="ten_hang" value="{{ ten_hang }}" style="width:100%;padding:12px;border:1px solid #d9d9d9;border-radius:8px;background:#f8f8ff;">
+            </div>
+            <div style="display:flex;align-items:flex-end;">
+                <button type="submit" style="width:100%;padding:12px 18px;background:#1a1a9a;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Tìm kiếm</button>
+            </div>
+        </form>
+
+        <form method="get" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div>
+                <label style="display:block;font-size:13px;color:#333;margin-bottom:6px;">Từ ngày</label>
+                <input type="text" placeholder="dd/mm/yyyy" style="width:100%;padding:12px;border:1px solid #d9d9d9;border-radius:8px;background:#f8f8ff;">
+            </div>
+            <div>
+                <label style="display:block;font-size:13px;color:#333;margin-bottom:6px;">Đến ngày</label>
+                <input type="text" placeholder="dd/mm/yyyy" style="width:100%;padding:12px;border:1px solid #d9d9d9;border-radius:8px;background:#f8f8ff;">
+            </div>
+        </form>
+    </div>
+
+    <div style="background:#fff;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.08);padding:20px;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#1a1a9a;color:#fff;text-align:center;">
+                    <th style="padding:14px 12px;border-right:1px solid rgba(255,255,255,.18);">STT</th>
+                    <th style="padding:14px 12px;border-right:1px solid rgba(255,255,255,.18);">Tên hàng</th>
+                    <th style="padding:14px 12px;border-right:1px solid rgba(255,255,255,.18);">Mã hàng</th>
+                    <th style="padding:14px 12px;border-right:1px solid rgba(255,255,255,.18);">Loại sơn</th>
+                    <th style="padding:14px 12px;border-right:1px solid rgba(255,255,255,.18);">Đơn vị tính</th>
+                    <th style="padding:14px 12px;border-right:1px solid rgba(255,255,255,.18);">Tồn kho</th>
+                    <th style="padding:14px 12px;border-right:1px solid rgba(255,255,255,.18);">Giá bán</th>
+                    <th style="padding:14px 12px;">Giá vốn</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sp in products %}
+                <tr style="border-bottom:1px solid #f0f0f0;text-align:center;">
+                    <td style="padding:14px 12px;color:#2a2a72;">{{ forloop.counter }}</td>
+                    <td style="padding:14px 12px;text-align:left;color:#333;">{{ sp.ten_son }}</td>
+                    <td style="padding:14px 12px;color:#333;">{{ sp.ma_son }}</td>
+                    <td style="padding:14px 12px;color:#333;">{{ sp.loai_son }}</td>
+                    <td style="padding:14px 12px;color:#333;">{{ sp.don_vi_tinh }}</td>
+                    <td style="padding:14px 12px;color:#333;">{{ sp.so_luong_ton }}</td>
+                    <td style="padding:14px 12px;color:#333;">{{ sp.gia_ban }}</td>
+                    <td style="padding:14px 12px;color:#333;">{{ sp.gia_nhap }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="padding:40px 12px;text-align:center;color:#666;font-weight:600;">
+                        Chưa có sản phẩm trong danh mục.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

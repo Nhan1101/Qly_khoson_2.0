@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Cảnh báo tồn kho{% endblock %}
+
+{% block content %}
+<div style="padding: 20px;">
+    <div style="background:#1a1a9a;color:#fff;padding:15px 20px;font-weight:700;">CẢNH BÁO TỒN KHO</div>
+    <div style="background:#fff;padding:20px;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#1a1a9a;color:#fff;">
+                    <th style="padding:12px;">STT</th>
+                    <th style="padding:12px;">Tên sản phẩm</th>
+                    <th style="padding:12px;">Số lượng tồn</th>
+                    <th style="padding:12px;">Mức tối thiểu</th>
+                    <th style="padding:12px;">Tình trạng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in danh_sach_canh_bao %}
+                <tr style="border-bottom:1px solid #eee;text-align:center;">
+                    <td style="padding:12px;">{{ forloop.counter }}</td>
+                    <td style="padding:12px;text-align:left;">{{ item.ten_son }}</td>
+                    <td style="padding:12px;">{{ item.so_luong_ton }}</td>
+                    <td style="padding:12px;">{{ item.muc_toi_thieu }}</td>
+                    <td style="padding:12px;">
+                        {% if item.so_luong_ton == 0 %}
+                            <span style="background:#d9534f;color:#fff;padding:5px 12px;border-radius:4px;">Nguy cấp</span>
+                        {% else %}
+                            <span style="background:#f0ad4e;color:#fff;padding:5px 12px;border-radius:4px;">Thiếu nhẹ</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding:24px;text-align:center;">Hiện chưa có sản phẩm nào cần cảnh báo.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
