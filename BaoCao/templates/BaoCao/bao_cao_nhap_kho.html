@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Báo cáo nhập kho - ALEX{% endblock %}
+
+{% block extra_css %}
+<style>
+    .report-page { padding: 20px; background: #f8f9fc; min-height: 100vh; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 25px; border: none; }
+
+    .report-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1a1a9a; padding-bottom: 15px; margin-bottom: 30px; }
+    .report-header h2 { color: #1a1a9a; margin: 0; font-size: 24px; text-transform: uppercase; }
+
+    /* Bố cục chính 2 cột */
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; }
+
+    /* Biểu đồ Doughnut và Chú thích */
+    .chart-container { display: flex; align-items: center; gap: 30px; position: relative; padding: 20px; }
+    .chart-title { position: absolute; top: -10px; left: 20px; font-weight: bold; font-size: 18px; }
+
+    .legend-box { width: 40px; height: 30px; border-radius: 6px; margin-right: 15px; }
+
+    /* Thẻ thống kê màu xanh lá đậm */
+    .stat-cards { display: flex; flex-direction: column; gap: 20px; }
+    .stat-card { display: flex; align-items: center; background: #2D7A4D; color: white; padding: 25px; border-radius: 15px; transition: transform 0.3s; }
+    .stat-card:hover { transform: translateY(-5px); }
+    .stat-icon { font-size: 40px; margin-right: 25px; opacity: 0.9; }
+    .stat-value { font-size: 36px; font-weight: bold; margin: 0; }
+    .stat-label { font-size: 16px; margin: 0; opacity: 0.9; }
+
+    /* Bảng danh sách */
+    .table-container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table thead { background: #1a1a9a; color: white; }
+    .data-table th, .data-table td { padding: 15px; text-align: center; border-bottom: 1px solid #eee; }
+
+    /* Select lọc nhanh */
+    .select-filter { padding: 8px; border-radius: 6px; border: 1px solid #ddd; background: white; cursor: pointer; font-family: inherit; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-page">
+    <div class="card">
+        <div class="report-header">
+            <h2>NHẬP KHO</h2>
+            <form method="GET" style="display: flex; gap: 15px; align-items: center;">
+                <select name="loc_nhanh" class="select-filter" onchange="this.form.submit()">
+                    <option value="">-- Lọc nhanh --</option>
+                    <option value="ngay" {% if loc_nhanh == 'ngay' %}selected{% endif %}>Hôm nay</option>
+                    <option value="tuan" {% if loc_nhanh == 'tuan' %}selected{% endif %}>Tuần này</option>
+                    <option value="thang" {% if loc_nhanh == 'thang' %}selected{% endif %}>Tháng này</option>
+                    <option value="nam" {% if loc_nhanh == 'nam' %}selected{% endif %}>Năm nay</option>
+                </select>
+
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <input type="date" name="bat_dau" value="{{ bat_dau }}" style="padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                    <span>đến</span>
+                    <input type="date" name="ket_thuc" value="{{ ket_thuc }}" style="padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                </div>
+
+                <button type="submit" style="background: #1a1a9a; color: white; border: none; padding: 8px 25px; border-radius: 6px; cursor: pointer; font-weight: bold;">Lọc</button>
+            </form>
+        </div>
+
+        <div class="summary-grid">
+            <div class="chart-container">
+                <span class="chart-title">Tỉ lệ nhập kho</span>
+                <div style="width: 280px; height: 280px;">
+                    <canvas id="loaiNhapChart"></canvas>
+                </div>
+
+                <div class="chart-legend">
+                    <div style="display: flex; align-items: center; margin-bottom: 25px;">
+                        <div class="legend-box" style="background: #2D7A4D;"></div>
+                        <span style="font-size: 16px;">Nhập kho<br>từ NCC</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="legend-box" style="background: #6FCF97;"></div>
+                        <span style="font-size: 16px;">Nhập kho<br>từ Đại lý</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div>
+                        <p class="stat-value">{{ tong_so_phieu|default:0 }}</p>
+                        <p class="stat-label">Số phiếu nhập kho</p>
+                    </div>
+                </div>
+                <div class="stat-card" style="background: #6FCF97; color: #000;">
+                    <div class="stat-icon">📦</div>
+                    <div>
+                        <p class="stat-value">{{ tong_luong_nhap|default:0 }}</p>
+                        <p class="stat-label">Tổng lượng nhập kho</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã phiếu</th>
+                    <th>Nhà cung cấp</th>
+                    <th>Tổng tiền (VNĐ)</th>
+                    <th>Thời gian</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for phieu in danh_sach_phieu %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>PN-{{ phieu.id|stringformat:"04d" }}</td>
+                    <td>{{ phieu.nha_cung_cap.ten_ncc }}</td>
+                    <td><strong>{{ phieu.tong_tien|floatformat:0 }}</strong></td>
+                    <td>{{ phieu.ngay_nhap|date:"d/m/Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding: 40px; color: #999;">Không có dữ liệu trong khoảng thời gian này.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script>
+    Chart.register(ChartDataLabels);
+    const ctx = document.getElementById('loaiNhapChart').getContext('2d');
+
+    const ptNhapNCC = {{ pt_nhap_ncc|default:0 }};
+    const ptNhapKhac = {{ pt_nhap_khac|default:0 }};
+    const holdsData = (ptNhapNCC + ptNhapKhac) > 0;
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Nhập từ NCC', 'Nhập từ Đại lý'],
+            datasets: [{
+                // Mặc định hiện 82% - 18% nếu chưa có dữ liệu thực tế để xem mẫu
+                data: holdsData ? [ptNhapNCC, ptNhapKhac] : [0, 0],
+                // Màu Xanh đậm (#2D7A4D) và Xanh nhạt (#6FCF97)
+                backgroundColor: ['#2D7A4D', '#6FCF97'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '50%',
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    color: '#fff', // Chữ trắng trên nền xanh đậm sẽ đẹp hơn
+                    font: { size: 18, weight: 'bold' },
+                    formatter: (value) => value > 0 ? value + '%' : ''
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

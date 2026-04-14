@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+}
+
+/* Header */
+.header-top {
+    background-color: #1a1a9a; /* Màu xanh đậm */
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px 50px;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 60px;
+}
+
+.slogan {
+    font-size: 30px;
+    font-weight: bold;
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.auth-btn a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Search Bar Area */
+.header-search-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background-color: #fff;
+}
+
+.search-container {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 400px;
+    padding: 5px 10px;
+}
+
+.search-container input {
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+.hotline {
+    background-color: #e32d1c; /* Màu đỏ */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+}
+
+/* Banner */
+.banner img {
+    width: 100%;
+    display: block;
+}
+
+/* Footer */
+footer {
+    background-color: #1a1a9a;
+    color: white;
+    padding: 20px 50px;
+    font-size: 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-content a {
+    color: white;
+}
