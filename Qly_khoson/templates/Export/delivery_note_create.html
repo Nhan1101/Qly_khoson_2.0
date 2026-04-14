@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Tạo mới phiếu xuất kho{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/delivery_note_create.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="delivery-create-page">
+  <div class="delivery-create-shell">
+    <div class="delivery-create-card">
+      <a class="delivery-create-close" href="{% url 'delivery-note-list' %}">X</a>
+      <h2 class="delivery-create-title">PHIẾU XUẤT KHO</h2>
+
+      {% if messages %}
+        {% for message in messages %}
+          <p style="margin-bottom: 12px;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="order_id" value="{{ form_values.order_id|default:'' }}">
+        <input type="hidden" name="export_type" value="{{ form_values.export_type|default:'' }}">
+        <section class="delivery-create-section">
+          <p class="delivery-create-section-title">Thông tin chung</p>
+          <div class="delivery-create-info-grid">
+            <div class="delivery-create-info-column">
+              <div class="delivery-create-field">
+                <label class="delivery-create-label">Nguồn nhận</label>
+                <input type="text" name="recipient_name" class="delivery-create-info-input text-left" value="{{ form_values.recipient_name }}">
+              </div>
+              <div class="delivery-create-field">
+                <label class="delivery-create-label">Mã đơn</label>
+                <input type="text" name="order_code" class="delivery-create-info-input" value="{{ form_values.order_code }}">
+              </div>
+              <div class="delivery-create-field">
+                <label class="delivery-create-label">Số điện thoại</label>
+                <input type="text" name="phone" class="delivery-create-info-input" value="{{ form_values.phone }}">
+              </div>
+              <div class="delivery-create-field">
+                <label class="delivery-create-label">Địa chỉ</label>
+                <input type="text" name="address" class="delivery-create-info-input text-left" value="{{ form_values.address }}">
+              </div>
+            </div>
+
+            <div class="delivery-create-info-column">
+              <div class="delivery-create-field">
+                <label class="delivery-create-label short">Mã phiếu</label>
+                <input type="text" class="delivery-create-info-input readonly" readonly value="{{ next_code }}">
+              </div>
+              <div class="delivery-create-field">
+                <label class="delivery-create-label short">Ngày xuất</label>
+                <input type="text" class="delivery-create-info-input text-center readonly" readonly value="{{ today|date:'d/m/Y' }}">
+              </div>
+              <div class="delivery-create-field">
+                <label class="delivery-create-label short">Dự kiến giao</label>
+                <input type="date" name="expected_date" class="delivery-create-info-input text-center" value="{{ form_values.expected_date }}">
+              </div>
+              <div class="delivery-create-field">
+                <label class="delivery-create-label short">Lý do xuất</label>
+                <input type="text" name="reason" class="delivery-create-info-input text-left" value="{{ form_values.reason }}">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="delivery-create-products-head">
+            <h3 class="delivery-create-products-title">Danh sách hàng hóa</h3>
+            <button class="delivery-create-btn-add" id="delivery-create-btn-add" type="button">
+              <i class="fa-solid fa-circle-plus"></i> Thêm
+            </button>
+          </div>
+
+          <div class="delivery-create-table-wrap">
+            <table class="delivery-create-table">
+              <thead>
+                <tr>
+                  <th style="width: 56px; text-align: center;">STT</th>
+                  <th style="text-align: left; padding-left: 20px;">Tên hàng hóa</th>
+                  <th style="width: 112px;">Mã hàng</th>
+                  <th style="width: 112px;">Đơn vị tính</th>
+                  <th style="width: 100px;">Tồn kho</th>
+                  <th style="width: 130px;">Đơn giá</th>
+                  <th style="width: 100px;">Số lượng</th>
+                  <th style="width: 144px;">Thành tiền</th>
+                  <th style="width: 56px; text-align: center;"><i class="fa-solid fa-gear"></i></th>
+                </tr>
+              </thead>
+              <tbody id="delivery-create-table-body">
+                <!-- Rows render via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="delivery-create-summary">
+            <div class="delivery-create-total-box">
+              <span class="delivery-create-total-label">TỔNG TIỀN:</span>
+              <span class="delivery-create-total-value" id="delivery-create-total-value">0 đ</span>
+            </div>
+            <button class="delivery-create-save-btn" type="submit">Lưu</button>
+          </div>
+        </section>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.productsJson = {{ products_json|safe|default:'[]' }};
+  window.existingDetailsJson = {{ existing_details_json|safe|default:'[]' }};
+</script>
+<script src="{% static 'js/pages/delivery_note_create.js' %}"></script>
+{% endblock %}

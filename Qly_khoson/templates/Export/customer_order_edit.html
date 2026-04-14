@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Sửa đơn đặt hàng{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/customer_order_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="order-edit-page" data-list-url="{% url 'customer-order-list' %}">
+  <div class="order-edit-shell">
+    <div class="order-edit-card">
+      <button class="order-edit-close" type="button">X</button>
+      <h2 class="order-edit-title">ĐƠN ĐẶT HÀNG</h2>
+      
+      {% if error %}
+        <p style="color: red; font-weight: bold; margin-bottom: 15px;">{{ error }}</p>
+      {% endif %}
+
+      <form method="post" id="customer-order-edit-form">
+        {% csrf_token %}
+        <section class="order-edit-section">
+        <p class="order-edit-section-title">Thông tin chung</p>
+        <div class="order-edit-info-grid">
+          <div class="order-edit-info-column">
+            <div class="order-edit-field">
+              <label class="order-edit-label">Tên khách hàng</label>
+              <input type="text" class="order-edit-info-input" name="customer_name" value="{{ order.doi_tuong_nhan.ten_nguoi_nhan|default:'' }}">
+            </div>
+            <div class="order-edit-field">
+              <label class="order-edit-label">Mã đơn</label>
+              <input type="text" class="order-edit-info-input" name="order_code" value="{{ order.ma_don|default:'' }}">
+            </div>
+            <div class="order-edit-field">
+              <label class="order-edit-label">Số điện thoại</label>
+              <input type="text" class="order-edit-info-input" name="phone" value="{{ order.doi_tuong_nhan.so_dien_thoai|default:'' }}">
+            </div>
+            <div class="order-edit-field textarea">
+              <label class="order-edit-label">Địa chỉ</label>
+              <textarea class="order-edit-info-input order-edit-textarea text-left" name="address">{{ order.doi_tuong_nhan.dia_chi|default:'' }}</textarea>
+            </div>
+          </div>
+
+          <div class="order-edit-info-column">
+            <div class="order-edit-field">
+              <label class="order-edit-label short">Mã phiếu</label>
+              <input type="text" class="order-edit-info-input readonly" readonly placeholder="">
+            </div>
+            <div class="order-edit-field">
+              <label class="order-edit-label short">Ngày đặt hàng</label>
+              <input type="date" class="order-edit-info-input text-center" name="order_date" value="{{ order.ngay_dat|date:'Y-m-d' }}">
+            </div>
+            <div class="order-edit-field textarea">
+              <label class="order-edit-label short">Ghi chú</label>
+              <textarea class="order-edit-info-input order-edit-textarea text-left" name="note">{{ order.ghi_chu|default:'' }}</textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="order-edit-products-head">
+          <h3 class="order-edit-products-title">Danh sách hàng hóa</h3>
+          <button class="order-edit-btn-add" type="button">
+            <i class="fa-solid fa-circle-plus"></i> Thêm
+          </button>
+        </div>
+
+        <div class="order-edit-table-wrap">
+          <table class="order-edit-table">
+            <thead>
+              <tr>
+                <th style="width: 56px;">STT</th>
+                <th style="text-align: left; padding-left: 20px;">Tên hàng hóa</th>
+                <th style="width: 112px;">Mã hàng</th>
+                <th style="width: 112px;">Đơn vị tính</th>
+                <th style="width: 144px;">Đơn giá</th>
+                <th style="width: 96px;">Số lượng</th>
+                <th style="width: 160px;">Thành tiền</th>
+                <th style="width: 64px;">Xóa</th>
+              </tr>
+            </thead>
+            <tbody id="order-edit-table-body">
+              <!-- Dynamic rows here -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="order-edit-summary">
+          <div class="order-edit-total-box">
+            <span class="order-edit-total-label">TỔNG TIỀN:</span>
+            <span class="order-edit-total-value" id="order-edit-total">{{ order.tong_tien }}</span>
+          </div>
+          <button class="order-edit-save-btn" type="submit">Lưu</button>
+        </div>
+      </section>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div id="order-edit-success-modal" class="order-edit-success-modal">
+  <div class="order-edit-success-dialog">
+    <div class="order-edit-success-icon">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <div class="order-edit-success-text">Lưu thành công!</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.productsJson = {{ products_json|safe|default:'[]' }};
+  window.existingDetailsJson = {{ existing_details_json|safe|default:'[]' }};
+</script>
+<script src="{% static 'js/pages/customer_order_edit.js' %}" defer></script>
+{% endblock %}
+

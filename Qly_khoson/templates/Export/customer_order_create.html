@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Tạo đơn đặt hàng{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/customer_order_create.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="order-create-page" data-list-url="{% url 'customer-order-list' %}">
+  <div class="order-create-shell">
+    <div class="order-create-card">
+      <a class="order-create-close" href="{% url 'customer-order-list' %}">X</a>
+      <h2 class="order-create-title">ĐƠN ĐẶT HÀNG</h2>
+      
+      {% if error %}
+        <p style="color: red; font-weight: bold; margin-bottom: 15px;">{{ error }}</p>
+      {% endif %}
+
+      <form method="post" id="customer-order-form">
+        {% csrf_token %}
+        <section class="order-create-section">
+        <p class="order-create-section-title">Thông tin chung</p>
+        <div class="order-create-info-grid">
+          <div class="order-create-info-column">
+            <div class="order-create-field">
+              <label class="order-create-label">Tên khách hàng</label>
+              <input id="order-create-ten-khach-hang" name="customer_name" type="text" class="order-create-info-input" placeholder="Nhập tên khách hàng">
+            </div>
+            <div class="order-create-field">
+              <label class="order-create-label">Mã đơn</label>
+              <input id="order-create-ma-don" name="order_code" type="text" class="order-create-info-input" placeholder="Nhập mã đơn (để trống tự sinh)">
+            </div>
+            <div class="order-create-field">
+              <label class="order-create-label">Số điện thoại</label>
+              <input id="order-create-so-dien-thoai" name="phone" type="text" class="order-create-info-input" placeholder="Nhập số điện thoại">
+            </div>
+            <div class="order-create-field textarea">
+              <label class="order-create-label">Địa chỉ</label>
+              <textarea id="order-create-dia-chi" name="address" class="order-create-info-input order-create-textarea text-left" placeholder="Nhập địa chỉ"></textarea>
+            </div>
+          </div>
+
+          <div class="order-create-info-column">
+            <div class="order-create-field">
+              <label class="order-create-label short">Mã phiếu</label>
+              <input id="order-create-ma-phieu" type="text" class="order-create-info-input readonly" readonly>
+            </div>
+            <div class="order-create-field">
+              <label class="order-create-label short">Ngày đặt hàng</label>
+              <input id="order-create-ngay-dat-hang" name="order_date" type="date" class="order-create-info-input text-center" placeholder="Nhập ngày đặt hàng">
+            </div>
+            <div class="order-create-field textarea">
+              <label class="order-create-label short">Ghi chú</label>
+              <textarea id="order-create-ghi-chu" name="note" class="order-create-info-input order-create-textarea text-left" placeholder="Nhập ghi chú"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="order-create-products-head">
+          <h3 class="order-create-products-title">Danh sách hàng hóa</h3>
+          <button class="order-create-btn-add" type="button">
+            <i class="fa-solid fa-circle-plus"></i> Thêm
+          </button>
+        </div>
+
+        <div class="order-create-table-wrap">
+          <table class="order-create-table">
+            <thead>
+              <tr>
+                <th style="width: 56px;">STT</th>
+                <th style="text-align: left; padding-left: 20px;">Tên hàng hóa</th>
+                <th style="width: 112px;">Mã hàng</th>
+                <th style="width: 112px;">Đơn vị tính</th>
+                <th style="width: 144px;">Đơn giá</th>
+                <th style="width: 96px;">Số lượng</th>
+                <th style="width: 160px;">Thành tiền</th>
+                <th style="width: 64px;">Xóa</th>
+              </tr>
+            </thead>
+            <tbody id="order-create-table-body">
+              <!-- Dynamic rows will go here -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="order-create-summary">
+          <div class="order-create-total-box">
+            <span class="order-create-total-label">TỔNG TIỀN:</span>
+            <span id="order-create-total" class="order-create-total-value">0 đ</span>
+          </div>
+          <button id="order-create-save-btn" class="order-create-save-btn" type="submit">Lưu</button>
+        </div>
+      </section>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.productsJson = {{ products_json|safe|default:'[]' }};
+</script>
+<script src="{% static 'js/pages/customer_order_create.js' %}" defer></script>
+{% endblock %}
+
+

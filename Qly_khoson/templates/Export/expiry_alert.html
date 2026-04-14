@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Xem cảnh báo hạn sử dụng{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link rel="stylesheet" href="{% static 'css/pages/expiry_alert.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="expiry-page">
+  <div class="expiry-card">
+
+    <div class="expiry-card-header">
+      <span class="expiry-card-header-title">CẢNH BÁO HẠN SỬ DỤNG</span>
+    </div>
+
+    <div class="expiry-date-row">
+      <span>Ngày hiện tại:</span>
+      <input class="expiry-date-input" type="text" value="05/02/2026">
+      <i class="fa-regular fa-calendar"></i>
+    </div>
+
+    <div class="expiry-table-wrap">
+      <table class="expiry-table">
+        <thead>
+          <tr>
+            <th style="width: 55px;">STT</th>
+            <th>Tên sản phẩm</th>
+            <th style="width: 140px;">Hạn sử dụng</th>
+            <th style="width: 160px;">Mức cảnh báo</th>
+            <th style="width: 140px;">Tình trạng</th>
+          </tr>
+        </thead>
+        <tbody id="expiry-table-body"></tbody>
+      </table>
+
+      {% if is_paginated %}
+      <div class="expiry-pagination">
+        {% if page_obj.has_previous %}
+        <button class="expiry-page-btn" type="button" aria-label="Trang trước" onclick="window.location.href='?page={{ page_obj.previous_page_number }}'">
+          <span class="material-icons-outlined">chevron_left</span>
+        </button>
+        {% else %}
+        <button class="expiry-page-btn" type="button" aria-label="Trang trước" disabled style="opacity: 0.5;">
+          <span class="material-icons-outlined">chevron_left</span>
+        </button>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <button class="expiry-page-btn active" type="button">{{ num }}</button>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <button class="expiry-page-btn" type="button" onclick="window.location.href='?page={{ num }}'">{{ num }}</button>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <button class="expiry-page-btn" type="button" aria-label="Trang sau" onclick="window.location.href='?page={{ page_obj.next_page_number }}'">
+          <span class="material-icons-outlined">chevron_right</span>
+        </button>
+        {% else %}
+        <button class="expiry-page-btn" type="button" aria-label="Trang sau" disabled style="opacity: 0.5;">
+          <span class="material-icons-outlined">chevron_right</span>
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  {% if expiry_json %}
+  var expiryRows = {{ expiry_json|safe }};
+  {% endif %}
+</script>
+<script src="{% static 'js/pages/expiry_alert.js' %}" defer></script>
+{% endblock %}
+
+

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Đơn đặt hàng của khách hàng{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/customer_order_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section
+  class="order-page"
+  data-delivery-create-url="{% url 'delivery-note-create' %}"
+>
+  <div class="order-search-card">
+    <div class="order-filter-group">
+      <span class="order-filter-label">Mã đơn</span>
+      <input class="order-filter-input" type="text" value="">
+    </div>
+    <div class="order-filter-group">
+      <span class="order-filter-label">Trạng thái</span>
+      <input class="order-filter-input" type="text" value="">
+    </div>
+    <button class="order-btn-search" type="button">
+      Tìm kiếm <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
+
+  <div class="order-table-card">
+    <div class="order-table-top">
+      <a class="order-btn-create" href="{% url 'customer-order-create' %}">
+        <i class="fa-solid fa-plus"></i> Tạo đơn đặt hàng
+      </a>
+    </div>
+    <div class="order-table-wrap">
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th style="width: 55px;">STT</th>
+            <th style="width: 110px;">Mã đơn</th>
+            <th>Tên khách hàng</th>
+            <th style="width: 130px;">Giá trị</th>
+            <th style="width: 175px;">
+              Thời gian
+              <span class="order-sort-icon" aria-hidden="true">
+                <i class="fa-solid fa-caret-up"></i>
+                <i class="fa-solid fa-caret-down"></i>
+              </span>
+            </th>
+            <th style="width: 145px;">Trạng thái</th>
+            <th style="width: 120px;">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="customer-order-table-body"></tbody>
+      </table>
+
+      {% if is_paginated %}
+      <div class="order-pagination">
+        {% if page_obj.has_previous %}
+        <button class="order-page-btn" type="button" aria-label="Trang trước" onclick="window.location.href='?page={{ page_obj.previous_page_number }}'">
+          <span class="material-icons-outlined" style="font-size: 18px;">chevron_left</span>
+        </button>
+        {% else %}
+        <button class="order-page-btn" type="button" aria-label="Trang trước" disabled style="opacity: 0.5;">
+          <span class="material-icons-outlined" style="font-size: 18px;">chevron_left</span>
+        </button>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <button class="order-page-btn active" type="button">{{ num }}</button>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <button class="order-page-btn" type="button" onclick="window.location.href='?page={{ num }}'">{{ num }}</button>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <button class="order-page-btn" type="button" aria-label="Trang sau" onclick="window.location.href='?page={{ page_obj.next_page_number }}'">
+          <span class="material-icons-outlined" style="font-size: 18px;">chevron_right</span>
+        </button>
+        {% else %}
+        <button class="order-page-btn" type="button" aria-label="Trang sau" disabled style="opacity: 0.5;">
+          <span class="material-icons-outlined" style="font-size: 18px;">chevron_right</span>
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div id="order-export-modal" class="order-export-modal">
+  <div class="order-export-dialog">
+    <button id="order-export-close" class="order-export-close" type="button">x</button>
+    <div class="order-export-title">Xuất kho toàn phần hay một phần?</div>
+    <div class="order-export-actions">
+      <button class="order-export-btn full" type="button" data-export-type="full">Toàn phần</button>
+      <button class="order-export-btn partial" type="button" data-export-type="partial">Một phần</button>
+      <button id="order-export-cancel" class="order-export-btn cancel" type="button">Hủy</button>
+    </div>
+  </div>
+</div>
+
+<div id="order-delete-modal" class="order-delete-modal">
+  <div class="order-delete-dialog">
+    <div class="order-delete-title">Bạn có chắc chắn muốn xóa?</div>
+    <div class="order-delete-actions">
+      <button id="order-delete-confirm" class="order-delete-btn yes" type="button">Có</button>
+      <button id="order-delete-cancel" class="order-delete-btn no" type="button">Không</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  {% if orders_json %}
+  var customerOrderRows = {{ orders_json|safe }};
+  {% endif %}
+</script>
+<script src="{% static 'js/pages/customer_order_list.js' %}" defer></script>
+{% endblock %}
+
+

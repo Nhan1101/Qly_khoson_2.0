@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Sửa phiếu xuất kho{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/delivery_note_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="delivery-edit-page">
+  <div class="delivery-edit-shell">
+    <div class="delivery-edit-card">
+      <a class="delivery-edit-close" href="{% url 'delivery-note-detail' note.pk %}">X</a>
+      <h2 class="delivery-edit-title">PHIẾU XUẤT KHO</h2>
+
+      {% if messages %}
+        {% for message in messages %}
+          <p style="margin-bottom: 12px;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="order_id" value="{{ form_values.order_id|default:'' }}">
+        <input type="hidden" name="export_type" value="{{ form_values.export_type|default:'' }}">
+        <section class="delivery-edit-section">
+          <p class="delivery-edit-section-title">Thông tin chung</p>
+          <div class="delivery-edit-info-grid">
+            <div class="delivery-edit-info-col">
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Nguồn nhận</span>
+                <input class="delivery-edit-input text-left" type="text" name="recipient_name" value="{{ form_values.recipient_name }}">
+              </div>
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Mã đơn</span>
+                <input class="delivery-edit-input" type="text" name="order_code" value="{{ form_values.order_code }}">
+              </div>
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Số điện thoại</span>
+                <input class="delivery-edit-input" type="text" name="phone" value="{{ form_values.phone }}">
+              </div>
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Địa chỉ</span>
+                <input class="delivery-edit-input text-left" type="text" name="address" value="{{ form_values.address }}">
+              </div>
+            </div>
+
+            <div class="delivery-edit-info-col">
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Mã phiếu</span>
+                <input class="delivery-edit-input" type="text" value="PX{{ note.id|stringformat:'05d' }}" readonly>
+              </div>
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Ngày xuất</span>
+                <input class="delivery-edit-input" type="text" value="{{ note.ngay_xuat|date:'d/m/Y' }}" readonly>
+              </div>
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Dự kiến giao</span>
+                <input class="delivery-edit-input" type="date" name="expected_date" value="{{ form_values.expected_date }}">
+              </div>
+              <div class="delivery-edit-field">
+                <span class="delivery-edit-label">Lý do xuất</span>
+                <input class="delivery-edit-input text-left" type="text" name="reason" value="{{ form_values.reason }}">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="delivery-edit-products-head">
+          <h3 class="delivery-edit-products-title">Danh sách hàng hóa</h3>
+          <button class="delivery-edit-btn-add" id="delivery-edit-btn-add" type="button">
+            <i class="fa-solid fa-circle-plus"></i> Thêm
+          </button>
+        </div>
+
+        <div class="delivery-edit-table-wrap">
+          <table class="delivery-edit-table">
+            <thead>
+              <tr>
+                <th style="width: 44px; text-align: center;">STT</th>
+                <th style="text-align: left; padding-left: 20px;">Tên hàng hóa</th>
+                <th style="width: 96px;">Mã hàng</th>
+                <th style="width: 74px;">Đơn vị tính</th>
+                <th style="width: 90px;">Tồn kho</th>
+                <th style="width: 120px;">Đơn giá</th>
+                <th style="width: 90px;">Số lượng</th>
+                <th style="width: 130px;">Thành tiền</th>
+                <th style="width: 50px; text-align: center;"><i class="fa-solid fa-gear"></i></th>
+              </tr>
+            </thead>
+            <tbody id="delivery-edit-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="delivery-edit-footer">
+          <div class="delivery-edit-total-box">
+            <span class="delivery-edit-total-label">TỔNG TIỀN:</span>
+            <span class="delivery-edit-total-value" id="delivery-edit-total-value">{{ note.tong_tien }}</span>
+          </div>
+          <button id="delivery-edit-save-btn" class="delivery-edit-save-btn" type="submit">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.productsJson = {{ products_json|safe|default:'[]' }};
+  window.existingDetailsJson = {{ existing_details_json|safe|default:'[]' }};
+</script>
+<script src="{% static 'js/pages/delivery_note_edit.js' %}"></script>
+{% endblock %}

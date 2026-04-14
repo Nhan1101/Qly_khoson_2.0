@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Xem phiếu xuất kho{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/delivery_note_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="delivery-view-page">
+  <div class="delivery-view-shell">
+    <div class="delivery-view-card">
+      <a class="delivery-view-close" href="{% url 'delivery-note-list' %}">X</a>
+      <h2 class="delivery-view-title">PHIẾU XUẤT KHO</h2>
+
+      <section class="delivery-view-section">
+        <p class="delivery-view-section-title">Thông tin chung</p>
+        <div class="delivery-view-info-grid">
+          <div class="delivery-view-info-col">
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Người nhận</span>
+              <div class="delivery-view-value text-left">{{ note.doi_tuong_nhan.ten_nguoi_nhan }}</div>
+            </div>
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Mã đơn</span>
+              <div class="delivery-view-value">{{ note.ma_don|default:"-" }}</div>
+            </div>
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Số điện thoại</span>
+              <div class="delivery-view-value">{{ note.doi_tuong_nhan.so_dien_thoai|default:"-" }}</div>
+            </div>
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Địa chỉ</span>
+              <div class="delivery-view-value text-left">{{ note.doi_tuong_nhan.dia_chi|default:"-" }}</div>
+            </div>
+          </div>
+
+          <div class="delivery-view-info-col">
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Mã phiếu</span>
+              <div class="delivery-view-value">PX{{ note.id|stringformat:"05d" }}</div>
+            </div>
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Ngày xuất</span>
+              <div class="delivery-view-value">{{ note.ngay_xuat|date:"d/m/Y" }}</div>
+            </div>
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Dự kiến giao</span>
+              <div class="delivery-view-value">{{ note.du_kien_giao|date:"d/m/Y"|default:"-" }}</div>
+            </div>
+            <div class="delivery-view-field">
+              <span class="delivery-view-label">Lý do xuất</span>
+              <div class="delivery-view-value text-left">{{ note.ly_do_xuat|default:"-" }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h3 class="delivery-view-products-title">Danh sách hàng hóa</h3>
+      <div class="delivery-view-table-wrap">
+        <table class="delivery-view-table">
+          <thead>
+            <tr>
+              <th style="width: 44px;">STT</th>
+              <th class="text-left">Tên hàng hóa</th>
+              <th style="width: 96px;">Mã hàng</th>
+              <th style="width: 74px;">Đơn vị tính</th>
+              <th style="width: 110px;">Đơn giá</th>
+              <th style="width: 74px;">Số lượng</th>
+              <th style="width: 120px;">Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in note_details %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td class="text-left">{{ item.detail.san_pham.ten_son }}</td>
+                <td>{{ item.detail.san_pham.ma_son }}</td>
+                <td>{{ item.detail.san_pham.don_vi_tinh }}</td>
+                <td>{{ item.detail.don_gia }}</td>
+                <td>{{ item.detail.so_luong }}</td>
+                <td>{{ item.line_total }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="7" style="padding: 14px; color: #6b7280;">Chưa có hàng hóa</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="delivery-view-total-row">
+        <div class="delivery-view-total-box">
+          <span class="delivery-view-total-label">TỔNG TIỀN:</span>
+          <span class="delivery-view-total-value">{{ note.tong_tien }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

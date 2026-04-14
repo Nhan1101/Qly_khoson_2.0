@@ -1,0 +1,320 @@
+﻿.delivery-page {
+    --delivery-blue: #0b08ab;
+    --delivery-blue-dark: #080690;
+    --delivery-border: #e5e5e5;
+  }
+
+  .delivery-filter-card {
+    margin-bottom: 14px;
+    padding: 14px 20px 16px;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .delivery-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
+
+  .delivery-filter-row + .delivery-filter-row {
+    margin-top: 10px;
+  }
+
+  .delivery-filter-label {
+    color: #333;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .delivery-filter-input {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background: #f0f0f0;
+    outline: none;
+    font: inherit;
+    font-size: 14px;
+  }
+
+  .delivery-filter-input:focus {
+    border-color: var(--delivery-blue);
+    background: #fff;
+  }
+
+  .delivery-input-sm {
+    width: 130px;
+  }
+
+  .delivery-input-md {
+    width: 180px;
+  }
+
+  .delivery-input-lg {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .delivery-input-date {
+    width: 160px;
+  }
+
+  .delivery-select-arrow {
+    width: 36px;
+    padding: 0 4px;
+    cursor: pointer;
+  }
+
+  .delivery-btn-search {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: auto;
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 5px;
+    background: #c8d0ff;
+    color: #222;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .delivery-btn-search:hover {
+    background: #a0aeff;
+  }
+
+  .delivery-action-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .delivery-btn-add {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 40px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 7px;
+    background: var(--delivery-blue);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(11, 8, 171, 0.22);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .delivery-btn-add:hover {
+    background: var(--delivery-blue-dark);
+    transform: translateY(-1px);
+  }
+
+  .delivery-table-wrap {
+    overflow: hidden;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.13);
+  }
+
+  .delivery-table-scroll {
+    overflow-x: auto;
+  }
+
+  .delivery-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .delivery-table thead tr {
+    background: var(--delivery-blue);
+  }
+
+  .delivery-table th {
+    padding: 13px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .delivery-sort-icon {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  .delivery-sort-icon i {
+    font-size: 9px;
+    opacity: 0.8;
+  }
+
+  .delivery-table tbody tr {
+    border-bottom: 1px solid var(--delivery-border);
+    transition: background 0.12s;
+  }
+
+  .delivery-table tbody tr:hover {
+    background: #f5f7ff;
+  }
+
+  .delivery-table tbody tr.clickable {
+    cursor: pointer;
+  }
+
+  .delivery-table td {
+    padding: 11px 10px;
+    border-right: 1px solid var(--delivery-border);
+    color: #222;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .delivery-table td:last-child {
+    border-right: none;
+  }
+
+  .delivery-td-value {
+    padding-right: 20px;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .delivery-link {
+    color: #0b08ab;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .delivery-link:hover {
+    text-decoration: underline;
+  }
+
+  .delivery-badge-plus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 2.5px solid #ff2b2b;
+    border-radius: 50%;
+    color: #ff2b2b;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.15s;
+  }
+
+  .delivery-badge-plus:hover {
+    background: #ff2b2b;
+    color: #fff;
+  }
+
+  .delivery-badge-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 2.5px solid #39a845;
+    border-radius: 50%;
+    background: #fff;
+    color: #39a845;
+    cursor: default;
+    font-size: 16px;
+  }
+
+  .delivery-btn-edit {
+    padding: 4px 6px;
+    border: none;
+    background: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 17px;
+    transition: color 0.15s;
+  }
+
+  .delivery-btn-edit:hover {
+    color: var(--delivery-blue);
+  }
+
+  .delivery-actions-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .delivery-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 0;
+  }
+
+  .delivery-page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+
+  .delivery-page-btn:hover {
+    border-color: var(--delivery-blue);
+    background: #e0e4ff;
+    color: var(--delivery-blue);
+  }
+
+  .delivery-page-btn.active {
+    border-color: var(--delivery-blue);
+    border-radius: 4px;
+    background: var(--delivery-blue);
+    color: #fff;
+  }
+
+  .delivery-page-ellipsis {
+    padding: 0 4px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 980px) {
+    .delivery-filter-row {
+      flex-wrap: wrap;
+    }
+
+    .delivery-btn-search {
+      margin-left: 0;
+    }
+
+    .delivery-table {
+      min-width: 860px;
+    }
+  }
+

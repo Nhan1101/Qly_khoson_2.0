@@ -1,4 +1,4 @@
-﻿from django.contrib import messages
+from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView
 
-from suppliers.models import ChiTietPhieuKiemKe, NguoiDung, PhieuKiemKe, TonKho
+from suppliers.models import ChiTietPhieuKiemKe, NguoiDung, PhieuKiemKe, SanPham
 
 
 def apply_ticket_display_state(ticket):
@@ -27,7 +27,7 @@ def apply_ticket_display_state(ticket):
 
 def build_ticket_detail_rows(ticket, data=None):
     stock_items = list(
-        TonKho.objects.select_related("san_pham").order_by("san_pham__ten_son", "san_pham__id")
+        SanPham.objects.all().order_by("ten_son", "id")
     )
     existing_details = {
         detail.san_pham_id: detail
@@ -37,10 +37,10 @@ def build_ticket_detail_rows(ticket, data=None):
     rows = []
     errors = []
 
-    for index, stock in enumerate(stock_items, start=1):
-        detail = existing_details.get(stock.san_pham_id)
-        actual_key = f"actual_{stock.san_pham_id}"
-        reason_key = f"reason_{stock.san_pham_id}"
+    for index, sp in enumerate(stock_items, start=1):
+        detail = existing_details.get(sp.id)
+        actual_key = f"actual_{sp.id}"
+        reason_key = f"reason_{sp.id}"
 
         if data is None:
             actual_raw = "" if detail is None else str(detail.so_luong_thuc_te)
@@ -59,19 +59,19 @@ def build_ticket_detail_rows(ticket, data=None):
                 if actual_value < 0:
                     actual_error = "Tồn thực tế phải lớn hơn hoặc bằng 0."
                 else:
-                    difference = actual_value - stock.so_luong_ton
-                    if actual_value < stock.so_luong_ton and not reason_raw:
+                    difference = actual_value - sp.so_luong_ton
+                    if actual_value < sp.so_luong_ton and not reason_raw:
                         reason_error = "Vui lòng nhập lý do khi tồn thực tế nhỏ hơn hệ thống."
             except ValueError:
                 actual_error = "Tồn thực tế phải là số nguyên."
 
         if actual_error or reason_error:
-            errors.append(stock.san_pham_id)
+            errors.append(sp.id)
 
         rows.append(
             {
                 "index": index,
-                "stock": stock,
+                "stock": sp,
                 "actual_name": actual_key,
                 "reason_name": reason_key,
                 "actual_raw": actual_raw,
@@ -203,7 +203,7 @@ class KiemKeDetailView(View):
                 stock = row["stock"]
                 actual_raw = row["actual_raw"]
                 reason_raw = row["reason_raw"] or None
-                detail = existing_details.get(stock.san_pham_id)
+                detail = existing_details.get(stock.id)
 
                 if not actual_raw:
                     if detail is not None:
@@ -213,7 +213,7 @@ class KiemKeDetailView(View):
                 actual_value = int(actual_raw)
                 ChiTietPhieuKiemKe.objects.update_or_create(
                     phieu_kiem_ke=ticket,
-                    san_pham=stock.san_pham,
+                    san_pham=stock,
                     defaults={
                         "so_luong_he_thong": stock.so_luong_ton,
                         "so_luong_thuc_te": actual_value,
@@ -222,5 +222,13 @@ class KiemKeDetailView(View):
                     },
                 )
 
-        messages.success(request, "Đã lưu chi tiết phiếu kiểm kê.")
+        if request.POST.get("action") == "complete":
+            try:
+                ticket.cap_nhat_ton_kho()
+                messages.success(request, "Đã hoàn thành phiếu kiểm kê và cập nhật tồn kho.")
+            except Exception as e:
+                messages.error(request, f"Lỗi khi hoàn thành phiếu: {str(e)}")
+        else:
+            messages.success(request, "Đã lưu chi tiết phiếu kiểm kê.")
+            
         return redirect("kiemke_detail", pk=ticket.pk)

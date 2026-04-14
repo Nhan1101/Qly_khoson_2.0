@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Xem chi tiết đơn đặt hàng{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/customer_order_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="order-detail-page">
+  <div class="order-detail-shell">
+    <div class="order-detail-card">
+      <a class="order-detail-close" href="{% url 'customer-order-list' %}">X</a>
+      <h2 class="order-detail-title">ĐƠN ĐẶT HÀNG</h2>
+
+      <section class="order-detail-section">
+        <p class="order-detail-section-title">Thông tin chung</p>
+        <div class="order-detail-info-grid">
+          <div class="order-detail-info-column">
+            <div class="order-detail-field">
+              <label class="order-detail-label">Tên khách hàng</label>
+              <div class="order-detail-value">{{ order.doi_tuong_nhan.ten_nguoi_nhan|default:"-" }}</div>
+            </div>
+            <div class="order-detail-field">
+              <label class="order-detail-label">Mã đơn</label>
+              <div class="order-detail-value">{{ order.ma_don|default:"-" }}</div>
+            </div>
+            <div class="order-detail-field">
+              <label class="order-detail-label">Số điện thoại</label>
+              <div class="order-detail-value">{{ order.doi_tuong_nhan.so_dien_thoai|default:"-" }}</div>
+            </div>
+            <div class="order-detail-field textarea">
+              <label class="order-detail-label">Địa chỉ</label>
+              <div class="order-detail-value text-left" style="min-height: 80px;">{{ order.doi_tuong_nhan.dia_chi|default:"-" }}</div>
+            </div>
+          </div>
+
+          <div class="order-detail-info-column">
+            <div class="order-detail-field">
+              <label class="order-detail-label short">Mã phiếu</label>
+              <div class="order-detail-value"></div>
+            </div>
+            <div class="order-detail-field">
+              <label class="order-detail-label short">Ngày đặt hàng</label>
+              <div class="order-detail-value text-center">{{ order.ngay_dat|date:"d/m/Y" }}</div>
+            </div>
+            <div class="order-detail-field textarea">
+              <label class="order-detail-label short">Ghi chú</label>
+              <div class="order-detail-note-box">
+                {{ order.ghi_chu|default:"-" }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="order-detail-products-title">Danh sách hàng hóa</h3>
+
+        <div class="order-detail-table-wrap">
+          <table class="order-detail-table">
+            <thead>
+              <tr>
+                <th style="width: 56px;">STT</th>
+                <th style="text-align: left; padding-left: 20px;">Tên hàng hóa</th>
+                <th style="width: 112px;">Mã hàng</th>
+                <th style="width: 112px;">Đơn vị tính</th>
+                <th style="width: 144px;">Đơn giá</th>
+                <th style="width: 96px;">Số lượng</th>
+                <th style="width: 160px;">Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in order.details.all %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td class="text-left">{{ item.san_pham.ten_son }}</td>
+                <td>{{ item.san_pham.ma_son }}</td>
+                <td>{{ item.san_pham.don_vi_tinh }}</td>
+                <td>{{ item.don_gia }}</td>
+                <td>{{ item.so_luong }}</td>
+                <td>{{ item.thanh_tien }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" style="text-align: center; color: #888;">Chưa có hàng hóa</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="order-detail-summary">
+          <div class="order-detail-total-box">
+            <span class="order-detail-total-label">TỔNG TIỀN:</span>
+            <span class="order-detail-total-value">{{ order.tong_tien }} đ</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+

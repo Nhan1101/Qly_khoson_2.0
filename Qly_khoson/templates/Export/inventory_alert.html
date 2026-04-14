@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Cảnh báo tồn kho{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/inventory_alert.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="inventory-page">
+  <div class="inventory-card">
+    <div class="inventory-card-header">
+      <span class="inventory-card-header-title">CẢNH BÁO TỒN KHO</span>
+    </div>
+
+    <div class="inventory-table-wrap">
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th style="width: 55px;">STT</th>
+            <th>Tên sản phẩm</th>
+            <th style="width: 150px;">Số lượng tồn</th>
+            <th style="width: 170px;">
+              Mức tối thiểu
+              <span class="inventory-sort-icon" aria-hidden="true">
+                <i class="fa-solid fa-caret-up"></i>
+                <i class="fa-solid fa-caret-down"></i>
+              </span>
+            </th>
+            <th style="width: 140px;">Tình trạng</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if is_paginated %}
+  <div class="inventory-pagination">
+    {% if page_obj.has_previous %}
+    <button class="inventory-page-btn" type="button" aria-label="Trang trước" onclick="window.location.href='?page={{ page_obj.previous_page_number }}'">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_left</span>
+    </button>
+    {% else %}
+    <button class="inventory-page-btn" type="button" aria-label="Trang trước" disabled style="opacity: 0.5;">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_left</span>
+    </button>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <button class="inventory-page-btn active" type="button">{{ num }}</button>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <button class="inventory-page-btn" type="button" onclick="window.location.href='?page={{ num }}'">{{ num }}</button>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <button class="inventory-page-btn" type="button" aria-label="Trang sau" onclick="window.location.href='?page={{ page_obj.next_page_number }}'">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_right</span>
+    </button>
+    {% else %}
+    <button class="inventory-page-btn" type="button" aria-label="Trang sau" disabled style="opacity: 0.5;">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_right</span>
+    </button>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  {% if inventory_json %}
+  var inventoryRows = {{ inventory_json|safe }};
+  {% endif %}
+</script>
+<script src="{% static 'js/pages/inventory_alert.js' %}" defer></script>
+{% endblock %}
+
+

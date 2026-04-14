@@ -15,6 +15,9 @@ class SupplierListView(ListView):
     context_object_name = "suppliers"
     paginate_by = 10
 
+    def get_queryset(self):
+        return super().get_queryset().order_by("ten_ncc", "id")
+
 
 class AccountListView(ListView):
     model = NguoiDung

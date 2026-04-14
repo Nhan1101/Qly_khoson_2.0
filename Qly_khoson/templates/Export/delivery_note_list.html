@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Danh sách phiếu xuất{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/delivery_note_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="delivery-page">
+  <form class="delivery-filter-card" method="get">
+    <div class="delivery-filter-row">
+      <span class="delivery-filter-label">Mã phiếu</span>
+      <input class="delivery-filter-input delivery-input-sm" type="text" name="code" value="{{ filters.code }}">
+
+      <span class="delivery-filter-label" style="margin-left: 8px;">Nguồn nhận</span>
+      <input class="delivery-filter-input delivery-input-lg" type="text" name="recipient" value="{{ filters.recipient }}">
+
+      <button class="delivery-btn-search" type="submit">
+        Tìm kiếm <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <div class="delivery-filter-row">
+      <span class="delivery-filter-label">Từ ngày</span>
+      <input class="delivery-filter-input delivery-input-date" type="date" name="date_from" value="{{ filters.date_from }}">
+
+      <span class="delivery-filter-label">Đến ngày</span>
+      <input class="delivery-filter-input delivery-input-date" type="date" name="date_to" value="{{ filters.date_to }}">
+    </div>
+  </form>
+
+  <div class="delivery-action-row">
+    <a class="delivery-btn-add" href="{% url 'delivery-note-create' %}">
+      <i class="fa-solid fa-plus"></i> Tạo phiếu xuất kho
+    </a>
+  </div>
+
+  <div class="delivery-table-wrap">
+    <div class="delivery-table-scroll">
+      <table class="delivery-table">
+        <thead>
+          <tr>
+            <th style="width: 56px;">STT</th>
+            <th style="width: 120px;">Mã phiếu</th>
+            <th style="width: 120px;">Nguồn nhận</th>
+            <th style="width: 130px;">Mã đơn</th>
+            <th style="width: 150px;">Giá trị</th>
+            <th style="width: 170px;">Thời gian</th>
+            <th style="width: 120px;">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for note in delivery_notes %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td><a class="delivery-link" href="{% url 'delivery-note-detail' note.pk %}">PX{{ note.id|stringformat:"05d" }}</a></td>
+              <td>{{ note.doi_tuong_nhan.ten_nguoi_nhan }}</td>
+              <td>{{ note.ma_don|default:"-" }}</td>
+              <td class="delivery-td-value">{{ note.tong_tien }}</td>
+              <td>{{ note.ngay_xuat|date:"d/m/Y" }}</td>
+              <td>
+                <div class="delivery-actions-cell">
+                  <a class="delivery-btn-edit" href="{% url 'delivery-note-edit' note.pk %}" title="Chỉnh sửa">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </a>
+                  {% if note.da_tao_don_giao_hang %}
+                    <span class="delivery-badge-check" title="Đã tạo đơn giao hàng">
+                      <i class="fa-solid fa-check"></i>
+                    </span>
+                  {% else %}
+                    <a class="delivery-badge-plus" href="{% url 'delivery-order-create' %}?note_id={{ note.pk }}" title="Tạo đơn giao hàng">
+                      <i class="fa-solid fa-plus"></i>
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" style="padding: 18px;">Chưa có phiếu xuất kho</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if messages %}
+    <div style="margin-top: 12px;">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

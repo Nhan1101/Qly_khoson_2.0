@@ -1,0 +1,126 @@
+﻿.expiry-page {
+    --expiry-blue: #0b08ab;
+    --expiry-border: #e0e0e0;
+  }
+
+  .expiry-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+  }
+
+  .expiry-card-header {
+    background: var(--expiry-blue);
+    padding: 13px 24px;
+  }
+
+  .expiry-card-header-title {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .expiry-date-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px 10px;
+  }
+
+  .expiry-date-input {
+    width: 120px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    padding: 5px 10px;
+    background: #e8e8e8;
+  }
+
+  .expiry-table-wrap {
+    padding: 0 24px 24px;
+  }
+
+  .expiry-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .expiry-table thead tr {
+    background: var(--expiry-blue);
+  }
+
+  .expiry-table th {
+    padding: 12px 10px;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .expiry-table td {
+    padding: 11px 10px;
+    border-bottom: 1px solid var(--expiry-border);
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .expiry-table tbody tr:hover {
+    background: #f5f7ff;
+  }
+
+  /* 🔥 CHỈNH CỘT TÊN SẢN PHẨM */
+  .expiry-table th:nth-child(2),
+  .expiry-table td:nth-child(2) {
+    width: 180px;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* căn trái cho đẹp */
+  .expiry-table td:nth-child(2) {
+    text-align: center;
+  }
+
+  .expiry-badge {
+    padding: 5px 14px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+  }
+
+  .expiry-badge-ok {
+    background: #f5a623;
+  }
+
+  .expiry-badge-warn {
+    background: #e53c2b;
+  }
+
+  .expiry-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 18px 0;
+  }
+
+  .expiry-page-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+  }
+
+  .expiry-page-btn.active {
+    background: var(--expiry-blue);
+    color: #fff;
+    border-radius: 4px;
+  }
+
+  .expiry-page-btn:hover {
+    background: #e0e4ff;
+  }
+

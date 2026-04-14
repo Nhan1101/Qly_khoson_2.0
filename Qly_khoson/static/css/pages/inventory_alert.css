@@ -1,0 +1,164 @@
+﻿.inventory-page {
+    --inventory-blue: #0b08ab;
+    --inventory-border: #e0e0e0;
+  }
+
+  .inventory-card {
+    overflow: hidden;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .inventory-card-header {
+    background: var(--inventory-blue);
+    padding: 13px 24px;
+  }
+
+  .inventory-card-header-title {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .inventory-table-wrap {
+    padding: 20px 24px 24px;
+  }
+
+  .inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .inventory-table thead tr {
+    background: var(--inventory-blue);
+  }
+  /* 🔥 CHỈNH CỘT TÊN SẢN PHẨM */
+  .inventory-table th:nth-child(2),
+  .inventory-table td:nth-child(2) {
+    width: 180px;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* căn trái cho đẹp */
+  .inventory-table td:nth-child(2) {
+    text-align: center;
+  }
+  .inventory-table th {
+    padding: 13px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .inventory-sort-icon {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  .inventory-sort-icon i {
+    font-size: 10px;
+    line-height: 1.1;
+    opacity: 0.85;
+  }
+
+  .inventory-table tbody tr {
+    border-bottom: 1px solid var(--inventory-border);
+    transition: background 0.12s;
+  }
+
+  .inventory-table tbody tr:hover {
+    background: #f5f7ff;
+  }
+
+  .inventory-table td {
+    padding: 12px 10px;
+    border-right: 1px solid var(--inventory-border);
+    color: #222;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .inventory-table td:last-child {
+    border-right: none;
+  }
+
+  .inventory-badge {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .inventory-badge-mild {
+    background: #f5a623;
+  }
+
+  .inventory-badge-critical {
+    background: #e53c2b;
+  }
+
+  .inventory-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 0 6px;
+  }
+
+  .inventory-page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background: none;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .inventory-page-btn:hover {
+    background: #e0e4ff;
+    color: var(--inventory-blue);
+  }
+
+  .inventory-page-btn.active {
+    border-color: var(--inventory-blue);
+    border-radius: 4px;
+    background: var(--inventory-blue);
+    color: #fff;
+  }
+
+  .inventory-page-dots {
+    padding: 0 4px;
+    color: #888;
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .inventory-table-wrap {
+      overflow-x: auto;
+    }
+
+    .inventory-table {
+      min-width: 700px;
+    }
+  }
+

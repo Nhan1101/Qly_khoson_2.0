@@ -1,4 +1,4 @@
-﻿{% load static %}
+{% load static %}
 <!doctype html>
 <html lang="vi">
   <head>
@@ -8,8 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'img/alex-logo.jpg' %}" type="image/jpeg">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
     <script src="{% static 'js/base.js' %}" defer></script>
   </head>
   <body>
@@ -59,11 +61,11 @@
             </button>
             <ul class="menu-items">
               <li><a href="#">Xuất kho</a></li>
-              <li><a href="#">Phiếu xuất kho</a></li>
-              <li><a href="#">Đơn đặt hàng KH</a></li>
+              <li><a href="{% url 'delivery-note-list' %}">Phiếu xuất kho</a></li>
+              <li><a href="{% url 'customer-order-list' %}">Đơn đặt hàng KH</a></li>
               <li><a href="#">Nhập kho</a></li>
-              <li><a href="#">Phiếu nhập kho</a></li>
-              <li><a href="#">Đơn đặt hàng NCC</a></li>
+              <li><a href="{% url 'delivery-note-list' %}">Phiếu nhập kho</a></li>
+              <li><a href="{% url 'customer-order-list' %}">Đơn đặt hàng NCC</a></li>
             </ul>
           </div>
 
@@ -81,9 +83,9 @@
               <span class="chevron" aria-hidden="true"></span>
             </button>
             <ul class="menu-items">
-              <li><a href="#">Danh mục sản phẩm</a></li>
-              <li><a href="#">Cảnh báo tồn kho</a></li>
-              <li><a href="#">Cảnh báo hạn sử dụng</a></li>
+              <li><a href="{% url 'product-catalog' %}">Danh mục sản phẩm</a></li>
+              <li><a href="{% url 'inventory-alert' %}">Cảnh báo tồn kho</a></li>
+              <li><a href="{% url 'expiry-alert' %}">Cảnh báo hạn sử dụng</a></li>
             </ul>
           </div>
 
@@ -132,4 +134,3 @@
     {% block extra_js %}{% endblock %}
   </body>
 </html>
-Error 404 (Not Found)!!1

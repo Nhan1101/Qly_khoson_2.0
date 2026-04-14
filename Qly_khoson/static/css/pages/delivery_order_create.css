@@ -1,0 +1,272 @@
+﻿.delivery-order-create-page {
+    padding: 22px 0;
+  }
+
+  .delivery-order-create-shell {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .delivery-order-create-card {
+    position: relative;
+    padding: 40px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    box-shadow: 0 20px 38px rgba(0, 0, 0, 0.18);
+  }
+
+  .delivery-order-create-close {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    color: #374151;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .delivery-order-create-close:hover {
+    color: #111827;
+  }
+
+  .delivery-order-create-title {
+    margin-bottom: 32px;
+    color: #000;
+    text-align: center;
+    letter-spacing: 0.04em;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .delivery-order-create-section {
+    margin-bottom: 40px;
+    padding: 24px;
+    border: 1px solid #9ca3af;
+    background: #f2f2f2;
+  }
+
+  .delivery-order-create-section-title {
+    margin-bottom: 20px;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .delivery-order-create-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .delivery-order-create-info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .delivery-order-create-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .delivery-order-create-field.textarea {
+    align-items: flex-start;
+  }
+
+  .delivery-order-create-label {
+    flex: 0 0 128px;
+    padding-top: 2px;
+    color: #374151;
+    font-size: 14px;
+  }
+
+  .delivery-order-create-label.short {
+    flex-basis: 112px;
+  }
+
+  .delivery-order-create-info-input {
+    width: 100%;
+    padding: 4px 10px;
+    border: 1px solid #bbb;
+    outline: none;
+    background: #fff;
+    color: #111827;
+    font-size: 13px;
+    text-align: right;
+  }
+
+  .delivery-order-create-info-input::placeholder,
+  .delivery-order-create-row-input::placeholder {
+    color: #9ca3af;
+  }
+
+  .delivery-order-create-info-input.readonly {
+    border-color: #ccc;
+    background: #e8e8e8;
+  }
+
+  .delivery-order-create-info-input.text-left {
+    text-align: left;
+  }
+
+  .delivery-order-create-info-input.text-center {
+    text-align: center;
+  }
+
+  .delivery-order-create-textarea {
+    min-height: 80px;
+    resize: none;
+  }
+
+  .delivery-order-create-products-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+
+  .delivery-order-create-products-title {
+    color: #111827;
+    font-size: 30px;
+    font-weight: 400;
+  }
+
+  .delivery-order-create-btn-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #5cb85c;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .delivery-order-create-btn-add:hover {
+    background: #2f855a;
+  }
+
+  .delivery-order-create-table-wrap {
+    overflow-x: auto;
+  }
+
+  .delivery-order-create-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .delivery-order-create-table th {
+    padding: 12px 5px;
+    border: 1px solid #ccc;
+    background: #e2e2e2;
+    color: #333;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .delivery-order-create-table td {
+    padding: 10px 5px;
+    vertical-align: middle;
+    font-size: 13px;
+  }
+
+  .delivery-order-create-row-input {
+    width: 100%;
+    padding: 4px 0;
+    border: none;
+    border-bottom: 1px solid #333;
+    outline: none;
+    background: transparent;
+    text-align: center;
+  }
+
+  .delivery-order-create-row-input.text-left {
+    padding-left: 8px;
+    text-align: left;
+  }
+
+  .delivery-order-create-delete-btn {
+    border: none;
+    background: none;
+    color: #dc2626;
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  .delivery-order-create-delete-btn:hover {
+    transform: scale(1.08);
+  }
+
+  .delivery-order-create-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  .delivery-order-create-total-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 384px;
+    padding: 12px 40px;
+    border-radius: 6px;
+    background: #e2e2e2;
+  }
+
+  .delivery-order-create-total-label,
+  .delivery-order-create-total-value {
+    color: #1f2937;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .delivery-order-create-save-btn {
+    padding: 12px 64px;
+    border: none;
+    border-radius: 10px;
+    background: #0b08ab;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 10px 18px rgba(11, 8, 171, 0.24);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .delivery-order-create-save-btn:hover {
+    background: #09068f;
+  }
+
+  @media (max-width: 980px) {
+    .delivery-order-create-card {
+      padding: 24px;
+    }
+
+    .delivery-order-create-info-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .delivery-order-create-products-head {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .delivery-order-create-table {
+      min-width: 920px;
+    }
+
+    .delivery-order-create-total-box {
+      width: 100%;
+      max-width: 384px;
+    }
+  }
+

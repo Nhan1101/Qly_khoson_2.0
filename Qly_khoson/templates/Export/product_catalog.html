@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sơn Alex - Danh mục sản phẩm{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/product_catalog.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="product-page">
+  <div class="product-filter-card">
+    <div class="product-filter-row">
+      <div class="product-field product-field-sm">
+        <label class="product-field-label" for="product-code">Mã hàng hóa</label>
+        <input id="product-code" class="product-field-input" type="text">
+      </div>
+
+      <div class="product-field product-field-lg">
+        <label class="product-field-label" for="product-name">Tên hàng hóa</label>
+        <input id="product-name" class="product-field-input" type="text">
+      </div>
+
+      <button class="product-search-btn" type="button">
+        Tìm kiếm <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <div class="product-filter-row">
+      <div class="product-field product-field-sm">
+        <label class="product-field-label" for="product-from-date">Từ ngày</label>
+        <div class="product-date-wrap">
+          <input id="product-from-date" class="product-field-input" type="date">
+          <span class="material-icons-outlined product-date-icon" aria-hidden="true">calendar_month</span>
+        </div>
+      </div>
+
+      <div class="product-field product-field-lg">
+        <label class="product-field-label" for="product-to-date">Đến ngày</label>
+        <div class="product-date-wrap">
+          <input id="product-to-date" class="product-field-input" type="date">
+          <span class="material-icons-outlined product-date-icon" aria-hidden="true">calendar_month</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="product-actions">
+    <button class="product-create-btn" type="button">
+      <i class="fa-solid fa-plus"></i> Tạo sản phẩm
+    </button>
+  </div>
+
+  <div class="product-table-card">
+    <div class="product-table-scroll">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th style="width: 58px;">STT</th>
+            <th style="width: 220px;">Tên hàng</th>
+            <th style="width: 110px;">Mã hàng</th>
+            <th style="width: 190px;">Loại sơn</th>
+            <th style="width: 110px;">Đơn vị tính</th>
+            <th style="width: 95px;">Tồn kho</th>
+            <th style="width: 130px;">Giá bán</th>
+            <th style="width: 130px;">Giá vốn</th>
+            <th style="width: 120px;">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="product-catalog-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if is_paginated %}
+  <div class="product-pagination">
+    {% if page_obj.has_previous %}
+    <button class="product-page-btn" type="button" aria-label="Trang trước" onclick="window.location.href='?page={{ page_obj.previous_page_number }}'">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_left</span>
+    </button>
+    {% else %}
+    <button class="product-page-btn" type="button" aria-label="Trang trước" disabled style="opacity: 0.5;">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_left</span>
+    </button>
+    {% endif %}
+        
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <button class="product-page-btn active" type="button">{{ num }}</button>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <button class="product-page-btn" type="button" onclick="window.location.href='?page={{ num }}'">{{ num }}</button>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <button class="product-page-btn" type="button" aria-label="Trang sau" onclick="window.location.href='?page={{ page_obj.next_page_number }}'">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_right</span>
+    </button>
+    {% else %}
+    <button class="product-page-btn" type="button" aria-label="Trang sau" disabled style="opacity: 0.5;">
+      <span class="material-icons-outlined" style="font-size: 18px;">chevron_right</span>
+    </button>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  {% if products_json %}
+  var productCatalogRows = {{ products_json|safe }};
+  {% endif %}
+</script>
+<script src="{% static 'js/pages/product_catalog.js' %}" defer></script>
+{% endblock %}
